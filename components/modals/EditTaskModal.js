@@ -59,7 +59,20 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
         alert("Task edited successfully!")
 
     }
-        
+    
+    const deleteTask = async () => {
+        const res = await TodoService.deleteTask(item.id, state.tasks)
+
+        if(!res.success){
+            alert("Task deleted successfully!")
+            dispatch({ type: 'LOAD_TASKS', payload: res.message });
+            closeModal();
+            return
+        }
+
+    }
+
+
     return (
         <View>
         
@@ -136,7 +149,7 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                                 <Text style={{ fontSize : 18 , color : 'white' }}>Edit Task</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{ width : '48%' , backgroundColor : '#3F3F40' , padding : 15 , marginTop : 35 , borderRadius : 5 , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
+                            <TouchableOpacity onPress={() => deleteTask()} style={{ width : '48%' , backgroundColor : '#3F3F40' , padding : 15 , marginTop : 35 , borderRadius : 5 , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
                                 <Text style={{ fontSize : 18 , color : 'white' }}>Delete Task</Text>
                             </TouchableOpacity>
 

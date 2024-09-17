@@ -36,6 +36,20 @@ export default {
     
     },
 
+    deleteTask: async function(taskId){
+        const tasks = await this.loadTasks();
+        
+        for(let i = 0; i < tasks.length; i++){
+            if(tasks[i].id == taskId){
+                tasks.splice(i, 1);
+                break
+            }
+        }
+
+        await AsyncStorage.setItem('taskList', JSON.stringify(tasks));
+
+    },
+
     isNewUser: async function() {
         const isNewUser = await AsyncStorage.getItem('newUser');
         if (!isNewUser) {

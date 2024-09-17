@@ -23,6 +23,16 @@ export default {
         }
     },
 
+
+    deleteTask: async(id , tasks) => {
+        const updatedTasks = tasks.filter(t => t.id !== id);
+        await AyncStorageService.deleteTask(id)
+        return {
+            success: true,
+            message: updatedTasks
+        }
+    },
+
     updateTask: async (task , tasks) => {
 
         if(task.title == '' || task.description == '' || task.priority == '' || task.category == '' || task.date == null){
