@@ -5,7 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 export default function CheckButton({pressEvent , taskItem}){
     return (
         <Pressable onPress={pressEvent} style={[styles.checkButton , {backgroundColor: '#1F1F1F'}]}>
-            {taskItem.completed == true && (<AntDesign name="check" size={16} color={"white" } />) }
+            {taskItem && taskItem.completed == true && (<AntDesign name="check" size={16} color={"white" } />) }
         </Pressable>
     )
 }

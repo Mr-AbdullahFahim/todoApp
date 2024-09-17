@@ -5,9 +5,9 @@ import ProgressTracker from '../../components/dashboard/ProgressComponent';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import TodayTask from '../../components/dashboard/TodayTask';
 import CreateNewTaskModal from '../../components/modals/CreateNewTaskModal';
-import EditTaskModal from '../../components/modals/EditTaskModal';
 import { useEffect, useState } from 'react';
 import AsyncStorageService from '../../services/AsyncStorageService';
+import SearchModal from '../../components/modals/SearchModal'
 
 export default function DashboardScreen() {
     const [isAdded,setIsAdded]=useState(false);
@@ -48,19 +48,7 @@ export default function DashboardScreen() {
                 {/* <EditTaskModal /> */}
             </View>
 
-            <View style={styles.search}>
-                
-                <View>
-                    <FontAwesome name={"search"} size={24} color="#a2a2a2" />
-                </View>
-
-                <TextInput
-                    style={{color: 'white', marginLeft: 10}}
-                    placeholder="Search Task Here"
-                    placeholderTextColor={'white'}
-                />
-
-            </View>
+            <SearchModal />
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 

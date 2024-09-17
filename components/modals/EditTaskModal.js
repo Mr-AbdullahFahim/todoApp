@@ -63,7 +63,7 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
     const deleteTask = async () => {
         const res = await TodoService.deleteTask(item.id, state.tasks)
 
-        if(!res.success){
+        if(res.success){
             alert("Task deleted successfully!")
             dispatch({ type: 'LOAD_TASKS', payload: res.message });
             closeModal();

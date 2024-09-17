@@ -26,10 +26,10 @@ export default function TaskItem({item , pressEvent}) {
             <TouchableOpacity  onPress={pressEvent} style={{}}>
                 
                 <View style={{ display : 'flex' , flex: 1 }} >
-                    <Text style={[styles.taskText , {color:'white' , fontSize: 17 , marginVertical: 'auto'}]}>{item.title}</Text>
+                    <Text style={[styles.taskText , {color:'white' , fontSize: 17 , marginVertical: 'auto'}]}>{item.title} [{item.priority}]</Text>
                     <View style={{ display : 'flex', marginTop : 5, flexDirection : 'row'}}>
                         <AntDesign name="calendar" size={18} color="gray" style={{ marginVertical: 'auto', marginRight : 5 }} />
-                        <Text style={[styles.taskText , { fontWeight: 'bold',  color:'gray' , fontSize: 14 , marginVertical: 'auto'}]}>{format(item.date , "dd MMM")}</Text>
+                        <Text style={[styles.taskText , { fontWeight: 'bold',  color:'gray' , fontSize: 14 , marginVertical: 'auto'}]}>{format(item.date , "dd MMM")}  #{item.category}</Text>
                     </View>
                 </View >
             </TouchableOpacity>
