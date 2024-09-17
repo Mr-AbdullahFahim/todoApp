@@ -23,6 +23,34 @@ export default {
         }
     },
 
+    updateTask: async (task , tasks) => {
+
+        if(task.title == '' || task.description == '' || task.priority == '' || task.category == '' || task.date == null){
+            return {
+                success: false,
+                message: 'All fields are required'
+            }
+        }
+        
+
+        for(let i = 0; i < tasks.length; i++){
+
+            if(tasks[i].id == task.id){
+                tasks[i] = task
+                break
+            }
+
+        }
+
+        await AyncStorageService.updateTask(task)
+
+        return {
+            success: true,
+            message: tasks
+        }
+
+    },
+
     getTodosByDate : (date , tasks) => {
         const filteredTodos = tasks.filter(task => 
             isSameDay(new Date(task.date), date)

@@ -19,6 +19,31 @@ export default {
 
     resetTasks: async function(){
         await AsyncStorage.removeItem('taskList');
+        await AsyncStorage.removeItem('newUser');
+    },
+
+    updateTask: async function(updatedTask){
+        const tasks = await this.loadTasks();
+        
+        for(let i = 0; i < tasks.length; i++){
+            if(tasks[i].id == updatedTask.id){
+                tasks[i] = updatedTask
+                break
+            }
+        }
+
+        await AsyncStorage.setItem('taskList', JSON.stringify(tasks));
+    
+    },
+
+    isNewUser: async function() {
+        const isNewUser = await AsyncStorage.getItem('newUser');
+        if (!isNewUser) {
+            await AsyncStorage.setItem('newUser', 'false');
+            return true; 
+        } else {
+            return false;
+        }
     }
 
 }

@@ -10,13 +10,16 @@ const reducer = (state, action) => {
     switch (action.type) {
         case 'LOAD_TASKS':
             state.tasks = [];
-            return { tasks: action.payload };
+            return {...state, tasks: action.payload };
         case 'ADD_TASK':
             return { ...state, tasks: [...state.tasks, action.payload] };
         case 'REMOVE_TASK':
             return { ...state, tasks: state.tasks.filter(task => task.id !== action.payload) };
         case 'UPDATE_TASK':
             return { ...state, tasks: state.tasks.map(task => (task.id == action.payload.id ? action.payload.task : task)) };
+        case 'GET_TASK_BY_ID':
+            const task = state.tasks.find(task => task.id === action.payload);
+            return { ...state, selectedTask: task }; 
         default:
             return state;
     }

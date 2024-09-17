@@ -1,29 +1,68 @@
-import React , {useState , useContext} from 'react';
+import React , {useState , useContext, useEffect} from 'react';
 import { View,  StyleSheet , Text, Modal, Pressable , TouchableOpacity , TextInput} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CalendarPicker from './CalendarView';
 import { ScrollView } from 'react-native-gesture-handler';
-import TodoService from '../../services/TodoService';
 import { TodoContext } from '../../store/store';
-
+import SelectableButton from '../SelectableButton';
+import TodoService from '../../services/TodoService';
 
 export default function EditTaskModal({item , modalVisible , closeModal}) {
 
     const {state, dispatch} = useContext(TodoContext);
-    const [formData , setFormData] = useState(item)
+    const [formData , setFormData] = useState(null)
+    const [selectedDate , setSelectedDate] = useState(null)
 
-    if(!item) {
+    useEffect(() => {
+        
+    }, [selectedDate])
+
+    useEffect(() => {
+        setFormData(item)
+    }, [item])
+
+    useEffect(() => {
+
+    }, [state.tasks])
+
+    const selectPriority = (text) => {
+        setFormData({...formData, priority:text})
+    }
+
+    const selectCategory = (text) => {
+        setFormData({...formData, category:text})
+    }
+
+    const handleFormatDate = (date) => {
+        const correctedDate = new Date(date)
+        setSelectedDate(correctedDate)
+        setFormData({...formData, date: correctedDate})
+    }
+
+    if(!item || !formData) {
         return
     }
 
+    const updateTask = async () => {
+
+        const updatedTasks = state.tasks.map(t => t.id === formData.id ? formData : t);
+
+        const res = await TodoService.updateTask(formData , updatedTasks)
+
+        if(!res.success){
+            alert(res.message)
+            return
+        }
+
+        dispatch({ type: 'LOAD_TASKS', payload: res.message });
+        alert("Task edited successfully!")
+
+    }
+        
     return (
         <View>
-            
-            {/* <Pressable style={{ marginVertical : 'auto', marginRight : 10 }} onPress={openModal}>
-                <Ionicons name="add-circle" size={28} color="white" />
-            </Pressable> */}
-
+        
             <Modal
                 animationType="slide"
                 transparent={false}
@@ -36,12 +75,12 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                         <Pressable style={{ display : 'flex' , justifyContent: 'flex-start' }} onPress={closeModal}>
                             <Ionicons name="close-circle" size={28} color="white" />
                         </Pressable>
-                        <Text style={styles.headerText}>{item.title}</Text>
+                        <Text style={styles.headerText}>{formData.title}</Text>
                     </View>
 
                     <ScrollView style={{ paddingBottom : 20 }}>
                         <View style={styles.calendarArea}>
-                            <CalendarPicker />
+                            <CalendarPicker setDate={handleFormatDate} gotDate={new Date(item.date)} />
                         </View>
 
                         <View style={{ marginTop : 20 }}>
@@ -54,7 +93,8 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                                 style={{backgroundColor: '#181818' , padding : 10 , color: 'white' , borderRadius : 5 , height : 40}}
                                 size='large'
                                 placeholder='Name'
-                                value={formData && formData.title}
+                                value={formData.title}
+                                onChangeText={(text) => setFormData({...formData, title : text})}
                             />
 
                             <View style={{ marginTop:20}}>
@@ -64,7 +104,8 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                                     placeholder='Description'
                                     multiline={true}
                                     numberOfLines={10}
-                                    
+                                    value={formData.description}
+                                    onChangeText={(text) => setFormData({...formData, description : text})}
                                 />
                             </View>
                         </View>
@@ -74,18 +115,9 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                         </View>
 
                         <View style={styles.priority}>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 35 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FACBBA' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>High</Text>
-                            </Pressable>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 35 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#D7F0FF' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>Medium</Text>
-                            </Pressable>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 35 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FAD9FF' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>Low</Text>
-                            </Pressable>
+                            <SelectableButton pressEvent={() => selectPriority('High')} selected={formData.priority == 'High'} text={'High'} />
+                            <SelectableButton pressEvent={() => selectPriority('Medium')} padding={30} selected={formData.priority == 'Medium'} text={'Medium'} />
+                            <SelectableButton pressEvent={() => selectPriority('Low')} selected={formData.priority == 'Low'} text={'Low'} />
                         </View>
 
                         <View style={{ marginTop : 40 }}>
@@ -93,23 +125,14 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
                         </View>
 
                         <View style={styles.priority}>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 20 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FACBBA' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>Personal</Text>
-                            </Pressable>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 35 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FACBBA' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>Work</Text>
-                            </Pressable>
-
-                            <Pressable style={{ borderRadius : 5 , paddingHorizontal : 35 , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FACBBA' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-                                <Text style={{ fontSize : 18 , color : 'white' }}>Stduy</Text>
-                            </Pressable>
+                            <SelectableButton pressEvent={() => selectCategory('Work')} selected={formData.category == 'Work'} text={'Work'} />
+                            <SelectableButton pressEvent={() => selectCategory('Study')} selected={formData.category == 'Study'} text={'Study'} />
+                            <SelectableButton pressEvent={() => selectCategory('Personal')} padding={20} selected={formData.category == 'Personal'} text={'Personal'} />
                         </View>
-
+    
                         <View style={{ display : 'flex' , justifyContent : 'space-between',  flexDirection : 'row'}}>
                             
-                            <TouchableOpacity style={{ width : '48%' , backgroundColor : '#D682B9' , padding : 15 , marginTop : 35 , borderRadius : 5 , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
+                            <TouchableOpacity onPress={() => updateTask()} style={{ width : '48%' , backgroundColor : '#D682B9' , padding : 15 , marginTop : 35 , borderRadius : 5 , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
                                 <Text style={{ fontSize : 18 , color : 'white' }}>Edit Task</Text>
                             </TouchableOpacity>
 
@@ -127,6 +150,9 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
 
         </View>
     )
+    
+
+
 }
 
 const styles = StyleSheet.create({

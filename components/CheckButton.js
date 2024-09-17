@@ -1,24 +1,25 @@
 import React from 'react';
-import { View,  StyleSheet , Text , TouchableOpacity } from 'react-native';
+import { View,  StyleSheet , Pressable } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function CheckButton(){
+export default function CheckButton({pressEvent , taskItem}){
     return (
-        <TouchableOpacity style={styles.checkButton}>
-            <AntDesign name="check" size={16} color="#000" />
-        </TouchableOpacity>
+        <Pressable onPress={pressEvent} style={[styles.checkButton , {backgroundColor: '#1F1F1F'}]}>
+            {taskItem.completed == true && (<AntDesign name="check" size={16} color={"white" } />) }
+        </Pressable>
     )
 }
 
-
 const styles = StyleSheet.create({
     checkButton: {
-        backgroundColor: '#BA83DE',
         borderRadius: 30,
+        width : 30,
+        height : 30,
         padding: 5,
         borderWidth: 1,
         borderColor: '#BA83DE',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: 'auto'
     }
 })

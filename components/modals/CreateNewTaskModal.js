@@ -6,33 +6,21 @@ import CalendarPicker from './CalendarView';
 import { ScrollView } from 'react-native-gesture-handler';
 import TodoService from '../../services/TodoService';
 import { TodoContext } from '../../store/store';
-
-function SelectableButton({selected , text , pressEvent , padding}){
-    return (
-        <Pressable onPress={pressEvent} style={{ backgroundColor: selected ? '#FAD9FF' : "black" , borderRadius : 5 , paddingHorizontal : padding != undefined ? padding : 35  , paddingVertical : 5 , borderWidth : 1 , borderColor : '#FAD9FF' , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
-            <Text style={{ fontSize : 18 , color : selected ? 'black' : 'white' }}>{text}</Text>
-        </Pressable>
-    )
-}
+import SelectableButton from '../SelectableButton';
 
 
-export default function CreateNewTaskModal({update}) {
+
+export default function CreateNewTaskModal() {
     const {state, dispatch} = useContext(TodoContext);
     const [modalVisible, setModalVisible] = useState(false);
    
     const [formData , setFormData] = useState({
         title : '',
         description : '',
-        categoty: '',
+        category: '',
         priority: '',
-        date: null
+        date: new Date()
     })
-
-    // const [date , getDate] = useState(null);
-    
-    // useEffect(() => {
-    //     selectDate(date)
-    // }, [date])
 
     useEffect(() => {
         console.log('state date : ' , state.tasks)
@@ -44,11 +32,10 @@ export default function CreateNewTaskModal({update}) {
     
     const closeModal = () => {
         setModalVisible(false);
-        update(true);
     };
 
     const handleCreateTask = async() => {
-        const res = await TodoService.createNewTask(formData.title , formData.description , formData.priority , formData.categoty , formData.date)
+        const res = await TodoService.createNewTask(formData.title , formData.description , formData.priority , formData.category , formData.date)
             
         if(!res.success){
             alert(res.message)
@@ -59,9 +46,9 @@ export default function CreateNewTaskModal({update}) {
         setFormData({
             title : '',
             description : '',
-            categoty: '',
+            category: '',
             priority: '',
-            date: null
+            date: new Date()
         })
     }
 
@@ -70,11 +57,12 @@ export default function CreateNewTaskModal({update}) {
     }
 
     const selectCategory = (text) => {
-        setFormData({...formData, categoty:text})
+        setFormData({...formData, category:text})
     }
 
     const selectDate = (newDate) => {
-        setFormData({...formData, date: new Date(newDate)});
+        const correctedDate = new Date(newDate)
+        setFormData({...formData, date: correctedDate})
     }
 
 
@@ -147,9 +135,9 @@ export default function CreateNewTaskModal({update}) {
                         </View>
 
                         <View style={styles.priority}>
-                            <SelectableButton pressEvent={() => selectCategory('Work')} selected={formData.categoty == 'Work'} text={'Work'} />
-                            <SelectableButton pressEvent={() => selectCategory('Study')} selected={formData.categoty == 'Study'} text={'Study'} />
-                            <SelectableButton pressEvent={() => selectCategory('Personal')} padding={20} selected={formData.categoty == 'Personal'} text={'Personal'} />
+                            <SelectableButton pressEvent={() => selectCategory('Work')} selected={formData.category == 'Work'} text={'Work'} />
+                            <SelectableButton pressEvent={() => selectCategory('Study')} selected={formData.category == 'Study'} text={'Study'} />
+                            <SelectableButton pressEvent={() => selectCategory('Personal')} padding={20} selected={formData.category == 'Personal'} text={'Personal'} />
                         </View>
 
                         <TouchableOpacity onPress={handleCreateTask} style={{ backgroundColor : '#D682B9' , padding : 15 , marginTop : 35 , borderRadius : 5 , display : 'flex' , justifyContent : 'center' , alignItems : 'center' }}>
