@@ -59,7 +59,7 @@ export default function DashboardScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {isLoading && <ProgressTracker taskList={[]} />}
+                <ProgressTracker date={new Date()} />
 
                 {isLoading && <TodayTask task={1} list={loadedTasks}/>}
                 {isLoading && <TodayTask task={2} list={loadedTasks}/>}

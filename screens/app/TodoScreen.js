@@ -16,7 +16,7 @@ export default function TodoScreen() {
     const [todoList , setTodoList] = useState([]);
     const [filterArray, setFilterArray] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedDate , setSelectedDate] = useState();
+    const [selectedDate , setSelectedDate] = useState(new Date());
 
     useEffect(() => {
         const res = TodoService.getTodosByDate(selectedDate , state.tasks);
@@ -125,7 +125,7 @@ export default function TodoScreen() {
                     </View>
 
                     <View style= {{ marginBottom : 10 }}>
-                        <ProgressTracker taskList={todoList} />
+                        <ProgressTracker date={new Date(selectedDate)} />
                     </View>
 
 
