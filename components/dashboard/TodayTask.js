@@ -39,7 +39,7 @@ export default function TodayTask({task, list, searchedText, onTaskUpdate}) {
                 state.tasks.map((singletask) => {
                     const taskDate = new Date(singletask.date); 
                     return taskDate.toLocaleDateString() === today.toLocaleDateString() && checkSearch((singletask.title).toLowerCase())? (
-                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
+                        <TaskItem pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
                     ) : null;
                 }) 
             : 
@@ -49,7 +49,7 @@ export default function TodayTask({task, list, searchedText, onTaskUpdate}) {
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate()+1)
                     return taskDate.toLocaleDateString() === tomorrow.toLocaleDateString() && checkSearch(singletask.title.toLowerCase()) ? (
-                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate}/>
+                        <TaskItem pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate}/>
                     ) : null;
                 })
             :
@@ -58,7 +58,7 @@ export default function TodayTask({task, list, searchedText, onTaskUpdate}) {
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate()+1)
                     return taskDate.toLocaleDateString()>tomorrow.toLocaleDateString() && checkSearch(singletask.title.toLowerCase()) ? (
-                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
+                        <TaskItem pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
                     ):null;
                 })
             }
