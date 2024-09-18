@@ -13,6 +13,9 @@ export default function DashboardScreen() {
     const [isAdded,setIsAdded]=useState(false);
     const [isLoading,setIsLoading] = useState(false);
     const [loadedTasks,setLoadedTasks]=useState([]);
+    const [searchValue, setSearchValue] = useState("");
+    const [todayTasks,setTodayTasks] = useState([]);
+    const [statusOfTasks,setStatusOfTasks] = useState(false);
     const loadTaskData = async () => {
         try {
             const tasks = await AsyncStorageService.loadTasks(); // Await for loading tasks
@@ -31,17 +34,28 @@ export default function DashboardScreen() {
             loadTaskData();
             setIsAdded(false);
         }
-    })
+    },[isAdded])
+    useEffect(()=>{
+        if(isLoading || isAdded){
+            const tasksForToday=loadedTasks.filter((task)=>{
+                const taskDate = new Date(task.date);
+                const today = new Date();
+                return (taskDate.toLocaleDateString()===today.toLocaleDateString());
+            });
+            setTodayTasks(tasksForToday);
+            if(tasksForToday.length>0){
+                setStatusOfTasks(true);
+            }
+        }
+    },[loadedTasks])
     const today = new Date();
-    const print=()=>{
-        console.log(today);
-    }
+
     return (
         <SafeAreaView style={styles.container} onLayout={loadTaskData}>
 
             <View style={styles.header}>
                 <View>
-                    <Text style={styles.headerText}>You have got 5 tasks</Text>
+                    <Text style={styles.headerText}>You have got {statusOfTasks && todayTasks.length} tasks</Text>
                     <Text style={styles.headerText}>today to complete 🖍️</Text>
                 </View>
                 <CreateNewTaskModal update={setIsAdded}/>
@@ -55,9 +69,10 @@ export default function DashboardScreen() {
                 </View>
 
                 <TextInput
-                    style={{color: 'white', marginLeft: 10}}
+                    style={styles.searchIntput}
                     placeholder="Search Task Here"
                     placeholderTextColor={'white'}
+                    onChangeText={searchText => setSearchValue(searchText)}
                 />
 
             </View>
@@ -71,11 +86,11 @@ export default function DashboardScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {isLoading && <ProgressTracker taskList={[]} />}
+                {isLoading && <ProgressTracker taskList={loadedTasks} />}
 
-                {isLoading && <TodayTask task={1} list={loadedTasks}/>}
-                {isLoading && <TodayTask task={2} list={loadedTasks}/>}
-                {isLoading && <TodayTask task={3} list={loadedTasks}/>}
+                {isLoading && <TodayTask task={1} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
+                {isLoading && <TodayTask task={2} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
+                {isLoading && <TodayTask task={3} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
 
             </ScrollView>
         </SafeAreaView>
@@ -131,6 +146,11 @@ const styles = StyleSheet.create({
         marginVertical: 'auto',
         fontSize: 13,
         color: 'gray'
+    },
+    searchIntput: {
+        color:'#fff',
+        marginLeft:10,
+        width:'100%',
     }
 
 })
