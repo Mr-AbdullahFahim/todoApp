@@ -1,4 +1,5 @@
 import Task from '../models/Todo'
+import AsyncStorageService from './AsyncStorageService';
 import AyncStorageService from './AsyncStorageService'
 import { isSameDay } from 'date-fns';
 
@@ -23,6 +24,17 @@ export default {
         }
     },
 
+    deleteTask: async function (taskId) {
+        if (taskId) {
+            await AsyncStorageService.deleteTask(taskId);
+            return {
+                success: false,
+                message: 'Task deleted successfully'
+            }
+        }
+
+    },
+
     updateTask: async (task , tasks) => {
 
         if(task.title == '' || task.description == '' || task.priority == '' || task.category == '' || task.date == null){
@@ -33,14 +45,14 @@ export default {
         }
         
 
-        for(let i = 0; i < tasks.length; i++){
+        {/*for(let i = 0; i < tasks.length; i++){
 
             if(tasks[i].id == task.id){
                 tasks[i] = task
                 break
             }
 
-        }
+        }*/}
 
         await AyncStorageService.updateTask(task)
 
