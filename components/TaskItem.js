@@ -8,7 +8,7 @@ import TodoService from '../services/TodoService';
 import { TodoContext  } from '../store/store';
 
 
-export default function TaskItem({item , pressEvent}) {
+export default function TaskItem({item , pressEvent, onTaskUpdate}) {
     const { state , dispatch } = useContext(TodoContext);
     const [task , setTask] = useState(item)
 
@@ -18,6 +18,7 @@ export default function TaskItem({item , pressEvent}) {
         const updatedTasks = state.tasks.map(t => t.id === task.id ? task : t);
         await TodoService.updateTask(task , updatedTasks)
         dispatch({ type: 'LOAD_TASKS', payload: updatedTasks });
+        onTaskUpdate(true);
     }
 
     return (

@@ -5,7 +5,11 @@ import {TodoContext} from '../../store/store';
 import EditTaskModal from '../modals/EditTaskModal';
 
 
-export default function TodayTask({task, list}) {
+export default function TodayTask({task, list, searchedText, onTaskUpdate}) {
+    function checkSearch(text){
+        return text.includes(searchedText.toLowerCase().trimStart());
+    }
+
     let today=new Date();
     const { state } = useContext(TodoContext);
     const [selectedItem , setSelectedItem] = useState(null);
@@ -34,8 +38,8 @@ export default function TodayTask({task, list}) {
             {task === 1 ? 
                 state.tasks.map((singletask) => {
                     const taskDate = new Date(singletask.date); 
-                    return taskDate.toLocaleDateString() === today.toLocaleDateString() ? (
-                        <TaskItem  pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} />
+                    return taskDate.toLocaleDateString() === today.toLocaleDateString() && checkSearch((singletask.title).toLowerCase())? (
+                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
                     ) : null;
                 }) 
             : 
@@ -44,8 +48,8 @@ export default function TodayTask({task, list}) {
                     const taskDate = new Date(singletask.date);
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate()+1)
-                    return taskDate.toLocaleDateString() === tomorrow.toLocaleDateString() ? (
-                        <TaskItem  pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} />
+                    return taskDate.toLocaleDateString() === tomorrow.toLocaleDateString() && checkSearch(singletask.title.toLowerCase()) ? (
+                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate}/>
                     ) : null;
                 })
             :
@@ -53,8 +57,8 @@ export default function TodayTask({task, list}) {
                     const taskDate = new Date(singletask.date);
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate()+1)
-                    return taskDate.toLocaleDateString()>tomorrow.toLocaleDateString() ? (
-                        <TaskItem  pressEvent={() => setSelectedItemForModal(singletask)} item={singletask} key={singletask.id} />
+                    return taskDate.toLocaleDateString()>tomorrow.toLocaleDateString() && checkSearch(singletask.title.toLowerCase()) ? (
+                        <TaskItem item={singletask} key={singletask.id} onTaskUpdate={onTaskUpdate} />
                     ):null;
                 })
             }
