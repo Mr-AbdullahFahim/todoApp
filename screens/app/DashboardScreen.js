@@ -5,42 +5,46 @@ import ProgressTracker from '../../components/dashboard/ProgressComponent';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import TodayTask from '../../components/dashboard/TodayTask';
 import CreateNewTaskModal from '../../components/modals/CreateNewTaskModal';
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useContext } from 'react';
 import AsyncStorageService from '../../services/AsyncStorageService';
 import SearchModal from '../../components/modals/SearchModal'
+import { TodoContext } from '../../store/store';
 
 export default function DashboardScreen() {
+    const { state } = useContext(TodoContext);
     const [isAdded,setIsAdded]=useState(false);
     const [isLoading,setIsLoading] = useState(false);
     const [loadedTasks,setLoadedTasks]=useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [todayTasks,setTodayTasks] = useState([]);
     const [statusOfTasks,setStatusOfTasks] = useState(false);
+
     const loadTaskData = async () => {
         try {
-            const tasks = await AsyncStorageService.loadTasks(); // Await for loading tasks
+            const tasks = await AsyncStorageService.loadTasks();
             setLoadedTasks(tasks);
             if(tasks){
                 setIsLoading(true);
                 setIsAdded(false);
             }
-            // You can now use the loaded tasks
         } catch (error) {
-            console.error('Error loading tasks:', error); // Handle any errors
+            console.error('Error loading tasks:', error);
         }
     };
+
     useEffect(()=>{
         if(isAdded){
             loadTaskData();
             setIsAdded(false);
         }
-    },[isAdded])
+    },[isAdded , state.tasks])
+
     useEffect(()=>{
         if(isLoading || isAdded){
             const tasksForToday=loadedTasks.filter((task)=>{
                 const taskDate = new Date(task.date);
                 const today = new Date();
-                return (taskDate.toLocaleDateString()===today.toLocaleDateString());
+                return (taskDate.toLocaleDateString() === today.toLocaleDateString() && task.completed == false);
             });
             setTodayTasks(tasksForToday);
             if(tasksForToday.length>0){
@@ -48,6 +52,7 @@ export default function DashboardScreen() {
             }
         }
     },[loadedTasks])
+
     const today = new Date();
 
     return (
@@ -55,27 +60,18 @@ export default function DashboardScreen() {
 
             <View style={styles.header}>
                 <View>
-                    <Text style={styles.headerText}>You have got {statusOfTasks && todayTasks.length} tasks</Text>
+                    <Text style={styles.headerText}>You have got {state.tasks.filter((task) => {
+                        const taskDate = new Date(task.date);
+                        const today = new Date();
+                        return (taskDate.toLocaleDateString() === today.toLocaleDateString() && task.completed == false);
+                    }).length} tasks</Text>
                     <Text style={styles.headerText}>today to complete 🖍️</Text>
                 </View>
                 <CreateNewTaskModal update={setIsAdded}/>
                 {/* <EditTaskModal /> */}
             </View>
 
-            <View style={styles.search}>
-                
-                <View>
-                    <FontAwesome name={"search"} size={24} color="#a2a2a2" />
-                </View>
-
-                <TextInput
-                    style={styles.searchIntput}
-                    placeholder="Search Task Here"
-                    placeholderTextColor={'white'}
-                    onChangeText={searchText => setSearchValue(searchText)}
-                />
-
-            </View>
+            <SearchModal />
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 
@@ -86,7 +82,11 @@ export default function DashboardScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {isLoading && <ProgressTracker taskList={loadedTasks} />}
+                {isLoading && <ProgressTracker  taskList={state.tasks.filter((task) => {
+                    const taskDate = new Date(task.date);
+                    const today = new Date();
+                    return (taskDate.toLocaleDateString() === today.toLocaleDateString());
+                })}/>}
 
                 {isLoading && <TodayTask task={1} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
                 {isLoading && <TodayTask task={2} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}

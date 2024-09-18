@@ -3,38 +3,26 @@ import { View,  StyleSheet , Text } from 'react-native';
 import { ProgressBar } from '@ui-kitten/components';
 import { TodoContext } from '../../store/store';
 
-export default function ProgressTracker({ taskList }) {
+export default function ProgressTracker({ taskList , date }) {
     const [complete, setComplete] = useState(0);
     const [todayTaskCount, setTodayTaskCount] = useState(0);
     const [progressMessage, setProgressMessage] = useState('');
     const { state } = useContext(TodoContext);
-    const [taskList , setTaskList] = useState([]);
-
-    useEffect(() => {
-        const filteredTasks = state.tasks.filter(task => new Date(task.date).toDateString() === date.toDateString());
-        setTaskList(filteredTasks);
-    }, [state.tasks, date]);
 
     useEffect(() => {
         let counter = 0;
+        console.log("task list: " , taskList.length);  
         taskList.forEach((list) => {
-            const today = new Date();
-            const taskDate = new Date(list.date);
-            if (taskDate.toLocaleDateString() === today.toLocaleDateString()) {
-                counter++;
-            }
-        });
-        setTodayTaskCount(counter);
 
-        counter = 0;
-        taskList.forEach((list) => {
-            const today = new Date();
+            const today = date || new Date();
             const taskDate = new Date(list.date);
-            if (list.completed && taskDate.toLocaleDateString() === today.toLocaleDateString()) {
+            if (list.completed && taskDate.toDateString() === today.toDateString()) {
                 counter++;
             }
+
         });
         setComplete(counter);
+        setTodayTaskCount(taskList.length)
     }, [taskList]);
 
     useEffect(() => {
@@ -55,7 +43,7 @@ export default function ProgressTracker({ taskList }) {
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>Daily Task</Text>
-            <Text style={styles.taskComplete}>{complete}/{todayTaskCount} Task Completed</Text>
+            <Text style={styles.taskComplete}>{complete}/{taskList.length} Task Completed</Text>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.smallText}>{progressMessage}</Text>
@@ -65,7 +53,7 @@ export default function ProgressTracker({ taskList }) {
             </View>
 
             <ProgressBar
-                progress={taskList.length > 0 ?(completed / taskList.length) : 0}
+                progress={taskList.length > 0 ?(complete / taskList.length) : 0}
                 size='giant'
                 trackColor='#BA83DE'
             />
