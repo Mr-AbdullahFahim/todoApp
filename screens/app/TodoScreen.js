@@ -9,28 +9,30 @@ import AnalysisModal from '../../components/modals/Analysis';
 import TodoFilterList from '../../components/TodoScreen/TodoFilterList';
 import { TodoContext } from '../../store/store';
 import TodoService from '../../services/TodoService';
+import AsyncStorageService from '../../services/AsyncStorageService';
 
 export default function TodoScreen() {
     const [filterType, setFilterType] = useState('Priority');
     const { state } = useContext(TodoContext);
-    const [todoList , setTodoList] = useState([]);
+    const [todoList, setTodoList] = useState([]);
     const [filterArray, setFilterArray] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedDate , setSelectedDate] = useState();
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadedTasks, setLoadedTasks] = useState([]);
 
     useEffect(() => {
-        const res = TodoService.getTodosByDate(selectedDate , state.tasks);
-        setTodoList(res)
-    } , [state.tasks])
-
-    useEffect(() => {
-        const res = TodoService.getTodosByDate(selectedDate , state.tasks);
-        setTodoList(res)
-    } , [selectedDate , state.tasks])
+        const dateSelected = new Date(selectedDate);
+        const res = (state.tasks).filter((task)=>{
+            const taskDate = new Date(task.date);
+            return dateSelected.toLocaleDateString()===taskDate.toLocaleDateString()
+        });
+        setTodoList(res);
+    }, [selectedDate, state.tasks]);
 
     useEffect(() => {
         filterTasks();
-    }, [filterType, searchQuery , todoList , selectedDate]);
+    }, [filterType, searchQuery, todoList]);
 
     const filterTasks = () => {
         let filteredTasks = [];
@@ -114,20 +116,18 @@ export default function TodoScreen() {
                         placeholder='Search Task Here'
                         placeholderTextColor={'white'}
                         value={searchQuery}
-                        onChangeText={(text) => setSearchQuery(text)}
+                        onChangeText={(text) => setSearchQuery(text.toLowerCase())}
                     />
                 </View>
 
                 <ScrollView style={{ marginBottom: 130 }}>
-                    
                     <View style={styles.calendarArea}>
                         <CalendarPicker setDate={setSelectedDate} />
                     </View>
 
-                    <View style= {{ marginBottom : 10 }}>
-                        <ProgressTracker taskList={todoList} />
+                    <View style={{ marginBottom: 10 }}>
+                        <ProgressTracker taskList={todoList} selectedDate={selectedDate}/>
                     </View>
-
 
                     <FilterList selectedChip={filterType} clickEvent={setFilterType} />
 

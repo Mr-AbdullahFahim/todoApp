@@ -16,6 +16,8 @@ export default function DashboardScreen() {
     const [searchValue, setSearchValue] = useState("");
     const [todayTasks,setTodayTasks] = useState([]);
     const [statusOfTasks,setStatusOfTasks] = useState(false);
+    const [updateingTask,setUpdatingTask] = useState(null);
+
     const loadTaskData = async () => {
         try {
             const tasks = await AsyncStorageService.loadTasks(); // Await for loading tasks
@@ -40,7 +42,7 @@ export default function DashboardScreen() {
             const tasksForToday=loadedTasks.filter((task)=>{
                 const taskDate = new Date(task.date);
                 const today = new Date();
-                return (taskDate.toLocaleDateString()===today.toLocaleDateString());
+                return (taskDate.toLocaleDateString()===today.toLocaleDateString() && !task.completed);
             });
             setTodayTasks(tasksForToday);
             if(tasksForToday.length>0){
@@ -58,7 +60,7 @@ export default function DashboardScreen() {
                     <Text style={styles.headerText}>You have got {statusOfTasks && todayTasks.length} tasks</Text>
                     <Text style={styles.headerText}>today to complete 🖍️</Text>
                 </View>
-                <CreateNewTaskModal update={setIsAdded}/>
+                <CreateNewTaskModal update={setIsAdded} editingTask={updateingTask}/>
                 {/* <EditTaskModal /> */}
             </View>
 
@@ -81,17 +83,14 @@ export default function DashboardScreen() {
                 
                 <View style={{ flexDirection : 'row' , justifyContent: 'space-between' }}>
                     <Text style={[styles.headerText , {fontSize: 20}]}>Progress</Text>
-                    <TouchableOpacity>
-                        <Text style={[styles.taskComplete , {color : '#BA83DE'}]}>See All</Text>
-                    </TouchableOpacity>
                 </View>
 
-                {isLoading && <ProgressTracker taskList={loadedTasks} />}
+                {isLoading && <ProgressTracker taskList={loadedTasks} selectedDate={new Date()}/>}
 
-                {isLoading && <TodayTask task={1} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
-                {isLoading && <TodayTask task={2} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
-                {isLoading && <TodayTask task={3} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData}/>}
-
+                {isLoading && <TodayTask task={1} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData} onUpdatingTask={setUpdatingTask}/>}
+                {isLoading && <TodayTask task={2} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData} onUpdatingTask={setUpdatingTask}/>}
+                {isLoading && <TodayTask task={3} list={loadedTasks} searchedText={searchValue} onTaskUpdate={loadTaskData} onUpdatingTask={setUpdatingTask}/>}
+                
             </ScrollView>
         </SafeAreaView>
     )

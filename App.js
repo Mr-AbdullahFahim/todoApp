@@ -11,6 +11,7 @@ import LandingOrganize from './screens/landing/LandingOrganize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StoreProvider } from './store/store';
 import AsyncStorageService from './services/AsyncStorageService';
+import { StatusBar } from 'expo-status-bar';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ export default function App() {
               <Stack.Screen name="Main" component={BottomTabNavigator} />
             </Stack.Navigator>
           </NavigationContainer>
+          <StatusBar style="light"/>
         </ApplicationProvider>
       </StoreProvider>
     </SafeAreaProvider>

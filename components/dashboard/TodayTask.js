@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import TaskItem from '../TaskItem';
 
-export default function TodayTask({ task, list, searchedText, onTaskUpdate }) {
+export default function TodayTask({ task, list, searchedText, onTaskUpdate, onUpdatingTask }) {
   const [swipedTaskId, setSwipedTaskId] = useState(null); 
 
   function checkSearch(text) {
@@ -16,9 +16,6 @@ export default function TodayTask({ task, list, searchedText, onTaskUpdate }) {
         <Text style={[styles.taskText, { fontSize: 20, marginVertical: 'auto' }]}>
           {task == 1 ? "Today's tasks" : task == 2 ? "Tomorrow's tasks" : 'Upcoming Tasks'}
         </Text>
-        <TouchableOpacity style={{ marginVertical: 'auto' }}>
-          <Text style={[styles.taskComplete, { color: '#BA83DE' }]}>See All</Text>
-        </TouchableOpacity>
       </View>
 
       {task === 1
@@ -31,6 +28,7 @@ export default function TodayTask({ task, list, searchedText, onTaskUpdate }) {
                 onTaskUpdate={onTaskUpdate}
                 swipedTaskId={swipedTaskId} 
                 setSwipedTaskId={setSwipedTaskId} 
+                onUpdate={(task)=>onUpdatingTask(task)}
               />
             ) : null;
           })
@@ -46,6 +44,7 @@ export default function TodayTask({ task, list, searchedText, onTaskUpdate }) {
                 onTaskUpdate={onTaskUpdate}
                 swipedTaskId={swipedTaskId}
                 setSwipedTaskId={setSwipedTaskId}
+                onUpdate={(task)=>onUpdatingTask(task)}
               />
             ) : null;
           })
@@ -60,6 +59,7 @@ export default function TodayTask({ task, list, searchedText, onTaskUpdate }) {
                 onTaskUpdate={onTaskUpdate}
                 swipedTaskId={swipedTaskId}
                 setSwipedTaskId={setSwipedTaskId}
+                onUpdate={(task)=>onUpdatingTask(task)}
               />
             ) : null;
           })}

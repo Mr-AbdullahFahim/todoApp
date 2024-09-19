@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ProgressBar } from '@ui-kitten/components';
 
-export default function ProgressTracker({ taskList }) {
+export default function ProgressTracker({ taskList , selectedDate}) {
     const [complete, setComplete] = useState(0);
     const [todayTaskCount, setTodayTaskCount] = useState(0);
     const [progressMessage, setProgressMessage] = useState('');
@@ -10,7 +10,7 @@ export default function ProgressTracker({ taskList }) {
     useEffect(() => {
         let counter = 0;
         taskList.forEach((list) => {
-            const today = new Date();
+            const today = new Date(selectedDate);
             const taskDate = new Date(list.date);
             if (taskDate.toLocaleDateString() === today.toLocaleDateString()) {
                 counter++;
@@ -20,7 +20,7 @@ export default function ProgressTracker({ taskList }) {
 
         counter = 0;
         taskList.forEach((list) => {
-            const today = new Date();
+            const today = new Date(selectedDate);
             const taskDate = new Date(list.date);
             if (list.completed && taskDate.toLocaleDateString() === today.toLocaleDateString()) {
                 counter++;
