@@ -1,9 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, Text, SafeAreaView, TextInput } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, TextInput, Alert } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorageService from '../../services/AsyncStorageService';
+
 
 export default function AboutAppAScreen(){
+
+    const resetData = () => {
+        // TODO : Implement logic to reset data
+        Alert.alert('Reset Data', 'Are you sure you want to reset your data?', [
+            {text: 'Cancel', style: 'cancel'},
+            {text: 'Reset', onPress: async () => {
+                await AsyncStorageService.resetTasks()
+                Alert.alert('Data Reset', 'Your data has been reset successfully.');
+            }},
+        ]);
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={{ paddingHorizontal: 15 }}>
@@ -23,7 +37,7 @@ export default function AboutAppAScreen(){
                     <Text style={styles.bodyText}>This action is irreversible. It will delete your data including tasks and other data.</Text>
 
                     <View style={{ display :'flex' , width : '100%' ,  flexDirection : 'row' , justifyContent : 'flex-end' }}>
-                        <TouchableOpacity style={{ marginTop : 10 , borderRadius : 8,  padding : 12 , paddingHorizontal : 25 , backgroundColor : 'rgba(63,19,22,1)' }}>
+                        <TouchableOpacity onPress={resetData} style={{ marginTop : 10 , borderRadius : 8,  padding : 12 , paddingHorizontal : 25 , backgroundColor : 'rgba(63,19,22,1)' }}>
                             <Text style={{ color :'#EE716D' , fontSize : 16 }}>Delete Data</Text>
                         </TouchableOpacity>
                     </View>

@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { TodoContext } from '../../store/store';
 import SelectableButton from '../SelectableButton';
 import TodoService from '../../services/TodoService';
+import Todo from '../../models/Todo';
 
 export default function EditTaskModal({item , modalVisible , closeModal}) {
 
@@ -45,8 +46,8 @@ export default function EditTaskModal({item , modalVisible , closeModal}) {
     }
 
     const updateTask = async () => {
-
-        const updatedTasks = state.tasks.map(t => t.id === formData.id ? formData : t);
+        const updatedTodo = new Todo(formData.title , formData.description , formData.priority , formData.category , formData.date)
+        const updatedTasks = state.tasks.map(t => t.id === formData.id ? updatedTodo : t);
 
         const res = await TodoService.updateTask(formData , updatedTasks)
 

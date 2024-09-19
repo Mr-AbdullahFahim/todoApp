@@ -97,7 +97,7 @@ export default function TodoScreen() {
                         <Text style={styles.headerText}>Task List</Text>
                         <Text style={styles.headerText}>Explore your tasks 🌍</Text>
                     </View>
-                    <AnalysisModal />
+                    <AnalysisModal date={selectedDate} />
                 </View>
 
                 <View style={styles.search}>

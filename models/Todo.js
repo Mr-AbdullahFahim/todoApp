@@ -7,7 +7,8 @@ export default class Todo {
         this.priority = priority;
         this.category = category;
         this.completed = false;
-        this.date = date.toUTCString();
+        this.date = new Date(date).toUTCString()
+        this.completedTime = null;
     }
 
 }

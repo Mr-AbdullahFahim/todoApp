@@ -2,7 +2,7 @@ import { View,  StyleSheet , Text, Modal, Pressable , SafeAreaView} from 'react-
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 
-export default function AiTaskItem(){
+export default function AiTaskItem({item}){
     return (
         <View style={styles.container}>
             <View style={{ flexDirection : 'row' , justifyContent: 'space-between' }}>

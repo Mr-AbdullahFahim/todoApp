@@ -14,7 +14,7 @@ export default function TaskItem({item , pressEvent, onTaskUpdate}) {
 
 
     const toggleStatus = async() => {
-        setTask({...task ,  completed : !task.completed })
+        setTask({...task ,  completed : !task.completed , completedTime: task.completed ? new Date() : null })
         const updatedTasks = state.tasks.map(t => t.id === task.id ? task : t);
         await TodoService.updateTask(task , updatedTasks)
         dispatch({ type: 'LOAD_TASKS', payload: updatedTasks });
