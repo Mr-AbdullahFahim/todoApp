@@ -1,6 +1,5 @@
 import  React , {useEffect , useContext} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import TodoListScreen from '../screens/app/TodoListScreen';
 import DashboardScreen from '../screens/app/DashboardScreen';
 import { DarkTheme } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -8,6 +7,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import TodoScreen from '../screens/app/TodoScreen';
 import { TodoContext } from '../store/store';
 import AsyncStorageService from '../services/AsyncStorageService';
+import AboutAppAScreen from '../screens/app/AboutScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,7 +74,7 @@ export default function BottomTabNavigator() {
       
       <Tab.Screen
         name="Profile"
-        component={TodoListScreen}
+        component={AboutAppAScreen}
         options={{ tabBarLabel: 'Profile' }}
       />
     

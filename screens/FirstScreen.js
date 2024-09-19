@@ -10,9 +10,9 @@ export default function FirstScreen({ navigation }) {
             const isNewUser = await AsyncStorageService.isNewUser();
             console.log(isNewUser)
             if (isNewUser) {
-              navigation.navigate('LandingPage'); 
+              navigation.replace('LandingPage'); 
             } else {
-              navigation.navigate('Main');
+              navigation.replace('Main');
             }
               
           } catch (e) {

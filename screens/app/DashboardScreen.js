@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
     headerText: {
         marginVertical: 'auto',
         fontSize: 18,
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold',
     },
 
     taskComplete: {
