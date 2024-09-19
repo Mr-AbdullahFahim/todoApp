@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { Swipeable } from "react-native-gesture-handler";
 import TodoService from "../services/TodoService";
 import { TodoContext } from "../store/store";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function TaskItem({
   item,
@@ -65,17 +66,19 @@ export default function TaskItem({
         <Animated.View
           style={[styles.actionButton, { transform: [{ scale }] }]}
         >
-          <TouchableOpacity onPress={() => onUpdate(task)}>
-            <Text style={styles.actionText}>Update</Text>
+          <TouchableOpacity onPress={() => onUpdate(task)} style={styles.editDelete}>
+            <FontAwesome6 name="edit" color="white" size={20}/>
+            <Text style={styles.actionText}>Edit</Text>
           </TouchableOpacity>
         </Animated.View>
         <Animated.View
           style={[
             styles.actionButton,
-            { backgroundColor: "#8875FF", transform: [{ scale }] },
+            { transform: [{ scale }] },
           ]}
         >
-          <TouchableOpacity onPress={() => handleDelete(task.id)}>
+          <TouchableOpacity onPress={() => handleDelete(task.id)} style={styles.editDelete}>
+            <FontAwesome6 name="trash-can" color="white" size={20}/>
             <Text style={styles.actionText}>Delete</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -88,9 +91,10 @@ export default function TaskItem({
       <Swipeable
         ref={swipeableRef}
         renderRightActions={renderRightActions}
-        rightThreshold={-150}
+        rightThreshold={70}
         overshootRight={false}
         onSwipeableWillOpen={() => setSwipedTaskId(item.id)} 
+        dragOffsetFromRightEdge={30}
       >
         <View style={styles.container}>
           <TouchableOpacity
@@ -185,15 +189,14 @@ const styles = StyleSheet.create({
   actionButton: {
     justifyContent: "center",
     alignItems: "center",
-    width: 80,
-    height: "100%",
-    borderRadius: 5,
-    backgroundColor: "#8875FF",
-    marginLeft: 10,
+    width: 40,
+    marginLeft:8,
   },
   actionText: {
     color: "white",
     fontWeight: "bold",
+    fontSize:12,
+    marginTop:4,
   },
   taskText: {
     fontSize: 16,
@@ -230,4 +233,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  editDelete:{
+    justifyContent:'center',
+    alignItems:'center',
+  }
 });

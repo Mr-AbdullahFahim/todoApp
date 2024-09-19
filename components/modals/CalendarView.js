@@ -23,9 +23,7 @@ export default function CalendarPicker({ setDate , gotDate}) {
   
   const [selectedDate, setSelectedDate] = useState(gotDate || new Date());
 
-  const [currentWeekStart, setCurrentWeekStart] = useState(
-    startOfWeek(gotDate || new Date(), { weekStartsOn: 1 })
-  );
+  const [currentWeekStart, setCurrentWeekStart] = useState(gotDate || new Date());
   
   const handlePrevWeek = () => {
     setCurrentWeekStart(subWeeks(currentWeekStart, 1));
