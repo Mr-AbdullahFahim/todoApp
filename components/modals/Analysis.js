@@ -14,7 +14,7 @@ import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 export default function AnalysisModal({date}){
 
     const [modalVisible, setModalVisible] = useState(false);
-    const {state, dispatch} = useContext(TodoContext);
+    const {state} = useContext(TodoContext);
     const [analysisData, setAnalysisData] = useState('');
 
     const openModal = () => {
@@ -27,7 +27,7 @@ export default function AnalysisModal({date}){
 
     const handleAI = async () => {
         console.log("pressed \n");
-        const dayTasks = state.tasks.filter(task => task.date.toDateString() === new Date(date).toDateString())
+        const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
         const res = await AIService.analyzeTasks(dayTasks)
 
         if(res.success){

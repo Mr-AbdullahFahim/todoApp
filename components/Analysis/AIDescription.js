@@ -17,7 +17,7 @@ export default function AIDescriptionCard({date}){
             <Text style={styles.title}>Statistics</Text>
 
             <View style={{ display : 'flex' , flexDirection : 'row' , justifyContent : 'space-between' }}>
-                <Text style={[styles.description , {marginVertical : 'auto' , fontWeight : 'bold'}]}>✅ Total tasks:</Text>
+                <Text style={[styles.description , {marginVertical : 'auto' , fontWeight : 'bold'}]}>📋 Total tasks:</Text>
                 <Text style={[styles.description , {marginVertical : 'auto', fontWeight : 'bold'}]}>{list}</Text>
             </View>
            

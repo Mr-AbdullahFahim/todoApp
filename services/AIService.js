@@ -16,7 +16,7 @@ export default {
       ).join('\n')}\n\nBased on task list that i have provided, What task should i give more time and priority first to complete all the tasks efficiently and quickly list the tasks in order based on your analysis. Give me reasons also in short form. In point form and markdown format and proper markdown line breaking. do not Show bullets or list numbers`;
 
       const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini-2024-07-18',
         messages: [{ role: 'system', content: prompt }],
         max_tokens: 200,
       });
