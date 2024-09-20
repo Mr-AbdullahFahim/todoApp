@@ -9,11 +9,12 @@ import AnalysisModal from '../../components/modals/Analysis';
 import TodoFilterList from '../../components/TodoScreen/TodoFilterList';
 import { TodoContext } from '../../store/store';
 import TodoService from '../../services/TodoService';
+import AsyncStorageService from '../../services/AsyncStorageService';
 
 export default function TodoScreen() {
     const [filterType, setFilterType] = useState('Priority');
     const { state } = useContext(TodoContext);
-    const [todoList , setTodoList] = useState([]);
+    const [todoList, setTodoList] = useState([]);
     const [filterArray, setFilterArray] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDate , setSelectedDate] = useState(new Date());
@@ -25,7 +26,7 @@ export default function TodoScreen() {
 
     useEffect(() => {
         filterTasks();
-    }, [filterType, searchQuery , todoList , selectedDate]);
+    }, [filterType, searchQuery, todoList]);
 
     const filterTasks = () => {
         let filteredTasks = [];
@@ -109,12 +110,11 @@ export default function TodoScreen() {
                         placeholder='Search Task Here'
                         placeholderTextColor={'white'}
                         value={searchQuery}
-                        onChangeText={(text) => setSearchQuery(text)}
+                        onChangeText={(text) => setSearchQuery(text.toLowerCase())}
                     />
                 </View>
 
                 <ScrollView style={{ marginBottom: 130 }}>
-                    
                     <View style={styles.calendarArea}>
                         <CalendarPicker setDate={setSelectedDate} />
                     </View>
@@ -122,7 +122,6 @@ export default function TodoScreen() {
                     <View style= {{ marginBottom : 10 }}>
                         <ProgressTracker taskList={todoList} date={new Date(selectedDate)} />
                     </View>
-
 
                     <FilterList selectedChip={filterType} clickEvent={setFilterType} />
 

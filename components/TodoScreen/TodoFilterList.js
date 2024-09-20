@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 export default function TodoFilterList({task , list}) {
     const [modalVisible , setModalVisible] = useState(false);
     const [selectedItem , setSelectedItem] = useState(null);
-    
+    const [swipedTaskId, setSwipedTaskId] = useState(null);
+    const [taskUpdateStatus, setTaskUpdateStatus] = useState(false);
+
     const setSelectedItemForModal = (item)=> {
         setModalVisible(true)
         setSelectedItem(item)
@@ -22,7 +24,13 @@ export default function TodoFilterList({task , list}) {
             <View style={{marginBottom: 10, flexDirection : 'row' , justifyContent: 'space-between' }}>
                 <Text style={[styles.taskText , {fontSize: 20 , marginVertical: 'auto'}]}>{task}</Text>
             </View>
-            {list.map((taskItem , index) => (<TaskItem onTaskUpdate={() => console.log()} pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={taskItem.id} />))}
+            {list.map((taskItem , index) => (<TaskItem
+                item={taskItem}
+                key={taskItem.id}
+                swipedTaskId={swipedTaskId} 
+                setSwipedTaskId={setSwipedTaskId}
+                onTaskUpdate={setTaskUpdateStatus}
+              />))}
             <EditTaskModal item={selectedItem} closeModal={() => closeModal()} modalVisible={modalVisible} />
         </View>
     )

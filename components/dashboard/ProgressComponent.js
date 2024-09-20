@@ -16,10 +16,9 @@ export default function ProgressTracker({ taskList , date }) {
 
             const today = date || new Date();
             const taskDate = new Date(list.date);
-            if (list.completed && taskDate.toDateString() === today.toDateString()) {
+            if (taskDate.toLocaleDateString() === today.toLocaleDateString()) {
                 counter++;
             }
-
         });
         setComplete(counter);
         setTodayTaskCount(taskList.length)
