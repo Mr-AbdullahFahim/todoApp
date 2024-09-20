@@ -8,7 +8,7 @@ import TodoScreen from '../screens/app/TodoScreen';
 import { TodoContext } from '../store/store';
 import AsyncStorageService from '../services/AsyncStorageService';
 import AboutAppAScreen from '../screens/app/AboutScreen';
-
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
@@ -75,7 +75,12 @@ export default function BottomTabNavigator() {
       <Tab.Screen
         name="Profile"
         component={AboutAppAScreen}
-        options={{ tabBarLabel: 'Profile' }}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="manage-accounts" size={26} color={color} />
+          ),
+        }}
       />
     
     </Tab.Navigator>

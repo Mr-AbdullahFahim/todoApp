@@ -8,8 +8,9 @@ import AiTaskItem from '../Analysis/AiTaskItem';
 import { TodoContext } from '../../store/store';
 import AIService from '../../services/AIService';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { TouchableOpacity } from 'react-native';
+import LoadingModal from './LoadindModal';
+import MagicWandButton from '../MagicWandButton';
 
 
 export default function AnalysisModal({date}){
@@ -18,6 +19,7 @@ export default function AnalysisModal({date}){
     const {state} = useContext(TodoContext);
     const [analysisData, setAnalysisData] = useState('');
     const [todayTasks , setTodayTasks] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
@@ -33,6 +35,8 @@ export default function AnalysisModal({date}){
     };
 
     const handleAI = async () => {
+        setIsLoading(true)
+        setAnalysisData('')
         console.log("pressed \n");
         const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
         const res = await AIService.analyzeTasks(dayTasks)
@@ -42,6 +46,8 @@ export default function AnalysisModal({date}){
         } else {
             alert("Error while analyzing data");
         }
+
+        setIsLoading(false)
 
     }
 
@@ -95,7 +101,7 @@ export default function AnalysisModal({date}){
                             <Ionicons name="close-circle" size={28} color="white" />
                         </Pressable>
 
-                        <Text onPress={handleAI} style={styles.headerText}>Detailed Analysis</Text>
+                        <Text style={styles.headerText}>Detailed Analysis</Text>
                     </View>
 
                     <ScrollView style={styles.body}>
@@ -104,12 +110,7 @@ export default function AnalysisModal({date}){
                         
                         <View style={{ marginTop : 30 , display :'flex' , flexDirection : 'row' , justifyContent : 'space-between' , width : '100%'}}>
                             <Text style={[styles.titleText , {marginVertical : 'auto'}]}>Detailed Analysis</Text>
-
-                            <TouchableOpacity style={{ marginVertical : 'auto', padding : 10 , borderWidth : 1 , borderRadius : '50%' , borderColor : '#BA83DE' }}>
-                                <FontAwesome6 name="wand-sparkles" size={16} color="gold" />
-                            </TouchableOpacity>
-
-
+                            <MagicWandButton pressEvent={handleAI} />
                         </View>
                         
                         <View style={{ backgroundColor : '#181818' ,  marginTop : 20 , padding : 15 , borderRadius : 8}}>
@@ -130,6 +131,8 @@ export default function AnalysisModal({date}){
                         </View>
                     
                     </ScrollView>
+
+                    <LoadingModal modalVisible={isLoading} />
 
                 </SafeAreaView>
 
