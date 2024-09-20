@@ -16,35 +16,20 @@ import TodoService from "../../services/TodoService";
 import { TodoContext } from "../../store/store";
 import SelectableButton from "../SelectableButton";
 
-export default function CreateNewTaskModal({ update, editingTask }) {
+export default function CreateNewTaskModal() {
   const { state, dispatch } = useContext(TodoContext);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const isEditing = editingTask !== null;
-
   const [formData, setFormData] = useState({
-    title: isEditing?editingTask.title:"",
-    description: isEditing?editingTask.description:"",
-    category: isEditing?editingTask.category:"",
-    priority: isEditing?editingTask.priority:"",
-    date: isEditing?new Date(editingTask.date):new Date(),
+    title: "",
+    description: "",
+    category: "",
+    priority: "",
+    date:new Date(),
   });
 
   useEffect(() => {
-    if (editingTask) {
-      openModal();
-      setFormData({
-        title: editingTask.title,
-        description: editingTask.description,
-        category: editingTask.category,
-        priority: editingTask.priority,
-        date: new Date(editingTask.date),
-      });
-    }
-  }, [editingTask]);
-
-  useEffect(() => {
-    console.log("state date : ", state.tasks);
+    // console.log("state date : ", state.tasks);
   }, [state]);
 
   const openModal = () => {
@@ -53,7 +38,6 @@ export default function CreateNewTaskModal({ update, editingTask }) {
 
   const closeModal = () => {
     setModalVisible(false);
-    update(true);
   };
 
   const handleCreateTask = async () => {
@@ -78,7 +62,7 @@ export default function CreateNewTaskModal({ update, editingTask }) {
       priority: "",
       date: new Date(),
     });
-    //setModalVisible(false);
+
   };
 
   const selectPriority = (text) => {

@@ -1,14 +1,15 @@
 import { View,  StyleSheet , Text, Modal, Pressable , SafeAreaView} from 'react-native';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React , {useState , useContext} from 'react';
+import React , {useState , useContext, useEffect} from 'react';
 import AIDescriptionCard from '../Analysis/AIDescription';
 import { ScrollView } from 'react-native-gesture-handler';
 import AiTaskItem from '../Analysis/AiTaskItem';
 import { TodoContext } from '../../store/store';
 import AIService from '../../services/AIService';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { TouchableOpacity } from 'react-native';
 
 
 export default function AnalysisModal({date}){
@@ -16,6 +17,12 @@ export default function AnalysisModal({date}){
     const [modalVisible, setModalVisible] = useState(false);
     const {state} = useContext(TodoContext);
     const [analysisData, setAnalysisData] = useState('');
+    const [todayTasks , setTodayTasks] = useState([]);
+
+    useEffect(() => {
+        const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
+        setTodayTasks(dayTasks)
+    } , [date , state.tasks])
 
     const openModal = () => {
         setModalVisible(true);
@@ -95,7 +102,15 @@ export default function AnalysisModal({date}){
                     
                         <AIDescriptionCard date={date} />
                         
-                        <Text style={[styles.titleText , { marginTop : 30}]}>Detailed Analysis</Text>
+                        <View style={{ marginTop : 30 , display :'flex' , flexDirection : 'row' , justifyContent : 'space-between' , width : '100%'}}>
+                            <Text style={[styles.titleText , {marginVertical : 'auto'}]}>Detailed Analysis</Text>
+
+                            <TouchableOpacity style={{ marginVertical : 'auto', padding : 10 , borderWidth : 1 , borderRadius : '50%' , borderColor : '#BA83DE' }}>
+                                <FontAwesome6 name="wand-sparkles" size={16} color="gold" />
+                            </TouchableOpacity>
+
+
+                        </View>
                         
                         <View style={{ backgroundColor : '#181818' ,  marginTop : 20 , padding : 15 , borderRadius : 8}}>
                             <Markdown
@@ -111,9 +126,7 @@ export default function AnalysisModal({date}){
                         <Text style={[styles.titleText , { marginTop : 30}]}>Time Analysis</Text>
 
                         <View style={{ marginVertical : 20 }}>
-                            <AiTaskItem />
-                            <AiTaskItem />
-                            <AiTaskItem />
+                            {todayTasks.map((item) => <AiTaskItem key={item.id} item={item} /> )}
                         </View>
                     
                     </ScrollView>

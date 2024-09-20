@@ -22,7 +22,6 @@ export default {
       });
 
       const analysis = response.choices[0].message.content.trim();
-      console.log("output -->" , analysis)
       return {
         success: true,
         output: analysis

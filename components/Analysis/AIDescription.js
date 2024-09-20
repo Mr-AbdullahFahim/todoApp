@@ -8,8 +8,9 @@ export default function AIDescriptionCard({date}){
     const [completed , setCompleted] = useState(0);
 
     useEffect(() => {
-        setList(state.tasks.filter(task =>  new Date(date).toLocaleDateString()  === new Date(task.date).toLocaleDateString()).length)
-        setCompleted(state.tasks.filter(task => task.completed === true).length)
+        const filteredList = state.tasks.filter(task =>  new Date(date).toLocaleDateString()  === new Date(task.date).toLocaleDateString())
+        setList(filteredList.length)
+        setCompleted(filteredList.filter(task => task.completed === true).length)
     }, [date])
 
     return (

@@ -107,7 +107,7 @@ export default function SearchModal(){
                         <Text style={[styles.titleText , { marginTop : 10}]}>Search results</Text>
 
                         <View style={{ marginVertical : 20 }}>
-                            {searchList.map((taskItem , index) => (<TaskItem pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={index} />))}
+                            {searchList.map((taskItem , index) => (<TaskItem onTaskUpdate={() => console.log('task updated!')} pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={index} />))}
                         </View>
 
                         <EditTaskModal item={selectedItem} closeModal={() => closeEditModal()} modalVisible={editModalVisible} />

@@ -22,7 +22,6 @@ export default {
 
   deleteTask: async function (taskId) {
     const taskList = await this.loadTasks();
-
     const updatedTasks = taskList.filter((task) => task.id !== taskId);
 
     await AsyncStorage.setItem("taskList", JSON.stringify(updatedTasks));

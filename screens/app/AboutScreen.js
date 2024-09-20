@@ -8,7 +8,6 @@ import AsyncStorageService from '../../services/AsyncStorageService';
 export default function AboutAppAScreen(){
 
     const resetData = () => {
-        // TODO : Implement logic to reset data
         Alert.alert('Reset Data', 'Are you sure you want to reset your data?', [
             {text: 'Cancel', style: 'cancel'},
             {text: 'Reset', onPress: async () => {

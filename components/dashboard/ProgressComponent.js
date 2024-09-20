@@ -11,12 +11,10 @@ export default function ProgressTracker({ taskList , date }) {
 
     useEffect(() => {
         let counter = 0;
-        console.log("task list: " , taskList.length);  
-        taskList.forEach((list) => {
-
-            const today = date || new Date();
-            const taskDate = new Date(list.date);
-            if (taskDate.toLocaleDateString() === today.toLocaleDateString()) {
+        state.tasks.forEach((item) => {
+            const day = date || new Date();
+            const taskDate = new Date(item.date);
+            if ( (taskDate.toLocaleDateString() === day.toLocaleDateString()) && item.completed) {
                 counter++;
             }
         });

@@ -68,8 +68,7 @@ export default function DashboardScreen() {
                     }).length} tasks</Text>
                     <Text style={styles.headerText}>today to complete 🖍️</Text>
                 </View>
-                <CreateNewTaskModal update={setIsAdded} editingTask={updateingTask}/>
-                {/* <EditTaskModal /> */}
+                <CreateNewTaskModal />
             </View>
 
             <SearchModal />
