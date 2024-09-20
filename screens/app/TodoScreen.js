@@ -17,18 +17,12 @@ export default function TodoScreen() {
     const [todoList, setTodoList] = useState([]);
     const [filterArray, setFilterArray] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [isLoading, setIsLoading] = useState(false);
-    const [loadedTasks, setLoadedTasks] = useState([]);
+    const [selectedDate , setSelectedDate] = useState(new Date());
 
     useEffect(() => {
-        const dateSelected = new Date(selectedDate);
-        const res = (state.tasks).filter((task)=>{
-            const taskDate = new Date(task.date);
-            return dateSelected.toLocaleDateString()===taskDate.toLocaleDateString()
-        });
-        setTodoList(res);
-    }, [selectedDate, state.tasks]);
+        const res = TodoService.getTodosByDate(selectedDate , state.tasks);
+        setTodoList(res)
+    } , [selectedDate , state.tasks])
 
     useEffect(() => {
         filterTasks();
@@ -104,7 +98,7 @@ export default function TodoScreen() {
                         <Text style={styles.headerText}>Task List</Text>
                         <Text style={styles.headerText}>Explore your tasks 🌍</Text>
                     </View>
-                    <AnalysisModal />
+                    <AnalysisModal date={selectedDate} />
                 </View>
 
                 <View style={styles.search}>
@@ -112,7 +106,7 @@ export default function TodoScreen() {
                         <FontAwesome name={'search'} size={24} color='#a2a2a2' />
                     </View>
                     <TextInput
-                        style={{ color: 'white', marginLeft: 10 }}
+                        style={{ width : '90%' , color: 'white', marginLeft: 10 }}
                         placeholder='Search Task Here'
                         placeholderTextColor={'white'}
                         value={searchQuery}
@@ -125,8 +119,8 @@ export default function TodoScreen() {
                         <CalendarPicker setDate={setSelectedDate} />
                     </View>
 
-                    <View style={{ marginBottom: 10 }}>
-                        <ProgressTracker taskList={todoList} selectedDate={selectedDate}/>
+                    <View style= {{ marginBottom : 10 }}>
+                        <ProgressTracker taskList={todoList} date={new Date(selectedDate)} />
                     </View>
 
                     <FilterList selectedChip={filterType} clickEvent={setFilterType} />

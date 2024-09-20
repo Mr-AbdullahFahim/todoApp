@@ -15,36 +15,26 @@ import { ScrollView } from "react-native-gesture-handler";
 import TodoService from "../../services/TodoService";
 import { TodoContext } from "../../store/store";
 import SelectableButton from "../SelectableButton";
+import MagicWandButton from "../MagicWandButton";
+import LoadingModal from "./LoadindModal";
+import AIService from "../../services/AIService";
 
-export default function CreateNewTaskModal({ update, editingTask }) {
+export default function CreateNewTaskModal() {
   const { state, dispatch } = useContext(TodoContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading , setIsLoading] = useState(false);
 
-  const isEditing = editingTask !== null;
 
   const [formData, setFormData] = useState({
-    title: isEditing?editingTask.title:"",
-    description: isEditing?editingTask.description:"",
-    category: isEditing?editingTask.category:"",
-    priority: isEditing?editingTask.priority:"",
-    date: isEditing?new Date(editingTask.date):new Date(),
+    title: "",
+    description: "",
+    category: "",
+    priority: "",
+    date:new Date(),
   });
 
   useEffect(() => {
-    if (editingTask) {
-      openModal();
-      setFormData({
-        title: editingTask.title,
-        description: editingTask.description,
-        category: editingTask.category,
-        priority: editingTask.priority,
-        date: new Date(editingTask.date),
-      });
-    }
-  }, [editingTask]);
-
-  useEffect(() => {
-    console.log("state date : ", state.tasks);
+    // console.log("state date : ", state.tasks);
   }, [state]);
 
   const openModal = () => {
@@ -53,8 +43,16 @@ export default function CreateNewTaskModal({ update, editingTask }) {
 
   const closeModal = () => {
     setModalVisible(false);
-    update(true);
   };
+
+  const handleAISuggestion = async () => {
+    if (formData.title == '') return;
+    setIsLoading(true)
+    const res = await AIService.giveTaskCreationSuggestions(formData.title)
+    const resultObj = JSON.parse(res.output)
+    setFormData({ ...formData, priority: resultObj.priority , description : resultObj.description , category: resultObj.category});
+    setIsLoading(false)
+  }
 
   const handleCreateTask = async () => {
     const res = await TodoService.createNewTask(
@@ -78,7 +76,7 @@ export default function CreateNewTaskModal({ update, editingTask }) {
       priority: "",
       date: new Date(),
     });
-    //setModalVisible(false);
+
   };
 
   const selectPriority = (text) => {
@@ -126,25 +124,32 @@ export default function CreateNewTaskModal({ update, editingTask }) {
             </View>
 
             <View style={{ marginTop: 20 }}>
-              <Text style={styles.titleText}>Schedule</Text>
+              <Text style={[styles.titleText , {marginVertical : 'auto'}]}>Schedule</Text>
             </View>
 
             <View style={{ marginTop: 20 }}>
-              <TextInput
-                style={{
-                  backgroundColor: "#181818",
-                  padding: 10,
-                  color: "white",
-                  borderRadius: 5,
-                  height: 40,
-                }}
-                size="large"
-                placeholder="Title"
-                onChangeText={(text) =>
-                  setFormData({ ...formData, title: text })
-                }
-                value={formData.title}
-              />
+              
+              <View style={{ display : 'flex' , flexDirection : 'row' , justifyContent : 'space-between' , width : '100%' }}>
+                <TextInput
+                  style={{
+                    backgroundColor: "#181818",
+                    padding: 10,
+                    color: "white",
+                    borderRadius: 5,
+                    height: 40,
+                    width : '80%',
+                    marginVertical : 'auto',
+                  }}
+                  size="large"
+                  placeholder="Title"
+                  onChangeText={(text) =>
+                    setFormData({ ...formData, title: text })
+                  }
+                  value={formData.title}
+                />                
+                <MagicWandButton pressEvent={handleAISuggestion}  />
+              </View>
+              
 
               <View style={{ marginTop: 20 }}>
                 <TextInput
@@ -229,6 +234,9 @@ export default function CreateNewTaskModal({ update, editingTask }) {
               <Text style={{ fontSize: 18, color: "white" }}>Create Task</Text>
             </TouchableOpacity>
           </ScrollView>
+            
+          <LoadingModal modalVisible={isLoading}  />
+
         </SafeAreaView>
       </Modal>
     </View>

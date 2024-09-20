@@ -19,16 +19,13 @@ export default function TodoFilterList({task , list}) {
         setSelectedItem(null)
     }
 
-    useEffect(() => {
-        // console.log(selectedItem)
-    }, [selectedItem])
-
     return(
         <View style={styles.task}>
             <View style={{marginBottom: 10, flexDirection : 'row' , justifyContent: 'space-between' }}>
                 <Text style={[styles.taskText , {fontSize: 20 , marginVertical: 'auto'}]}>{task}</Text>
             </View>
             {list.map((taskItem , index) => (<TaskItem
+                pressEvent={() => setSelectedItemForModal(taskItem)}
                 item={taskItem}
                 key={taskItem.id}
                 swipedTaskId={swipedTaskId} 

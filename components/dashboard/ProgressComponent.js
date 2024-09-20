@@ -1,38 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useEffect , useState , useContext } from 'react';
+import { View,  StyleSheet , Text } from 'react-native';
 import { ProgressBar } from '@ui-kitten/components';
+import { TodoContext } from '../../store/store';
 
-export default function ProgressTracker({ taskList , selectedDate}) {
+export default function ProgressTracker({ taskList , date }) {
     const [complete, setComplete] = useState(0);
     const [todayTaskCount, setTodayTaskCount] = useState(0);
     const [progressMessage, setProgressMessage] = useState('');
+    const { state } = useContext(TodoContext);
 
     useEffect(() => {
         let counter = 0;
-        taskList.forEach((list) => {
-            const today = new Date(selectedDate);
-            const taskDate = new Date(list.date);
-            if (taskDate.toLocaleDateString() === today.toLocaleDateString()) {
-                counter++;
-            }
-        });
-        setTodayTaskCount(counter);
-
-        counter = 0;
-        taskList.forEach((list) => {
-            const today = new Date(selectedDate);
-            const taskDate = new Date(list.date);
-            if (list.completed && taskDate.toLocaleDateString() === today.toLocaleDateString()) {
+        state.tasks.forEach((item) => {
+            const day = date || new Date();
+            const taskDate = new Date(item.date);
+            if ( (taskDate.toLocaleDateString() === day.toLocaleDateString()) && item.completed) {
                 counter++;
             }
         });
         setComplete(counter);
+        setTodayTaskCount(taskList.length)
     }, [taskList]);
 
     useEffect(() => {
         const progress = todayTaskCount > 0 ? (complete / todayTaskCount) * 100 : 0;
         if (progress === 100) {
-            setProgressMessage("Congratulations!\nYou've completed all tasks! 🎉");
+            setProgressMessage("You've completed all tasks! 🎉");
         } else if (progress >= 75) {
             setProgressMessage("You're almost there! Just a few more tasks!");
         } else if (progress >= 50) {
@@ -47,7 +40,7 @@ export default function ProgressTracker({ taskList , selectedDate}) {
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>Daily Task</Text>
-            <Text style={styles.taskComplete}>{complete}/{todayTaskCount} Task Completed</Text>
+            <Text style={styles.taskComplete}>{complete}/{taskList.length} Task Completed</Text>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.smallText}>{progressMessage}</Text>
@@ -57,7 +50,7 @@ export default function ProgressTracker({ taskList , selectedDate}) {
             </View>
 
             <ProgressBar
-                progress={todayTaskCount > 0 ? complete / todayTaskCount : 0}
+                progress={taskList.length > 0 ?(complete / taskList.length) : 0}
                 size='giant'
                 trackColor='#BA83DE'
             />

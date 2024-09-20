@@ -1,25 +1,84 @@
 import { View,  StyleSheet , Text, Modal, Pressable , SafeAreaView} from 'react-native';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React , {useState} from 'react';
+import React , {useState , useContext, useEffect} from 'react';
 import AIDescriptionCard from '../Analysis/AIDescription';
 import { ScrollView } from 'react-native-gesture-handler';
 import AiTaskItem from '../Analysis/AiTaskItem';
-import AsyncStorageService from '../../services/AsyncStorageService';
+import { TodoContext } from '../../store/store';
+import AIService from '../../services/AIService';
+import Markdown, { MarkdownIt } from 'react-native-markdown-display';
+import { TouchableOpacity } from 'react-native';
+import LoadingModal from './LoadindModal';
+import MagicWandButton from '../MagicWandButton';
 
 
-export default function AnalysisModal(){
+export default function AnalysisModal({date}){
 
     const [modalVisible, setModalVisible] = useState(false);
+    const {state} = useContext(TodoContext);
+    const [analysisData, setAnalysisData] = useState('');
+    const [todayTasks , setTodayTasks] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
+        setTodayTasks(dayTasks)
+    } , [date , state.tasks])
 
     const openModal = () => {
         setModalVisible(true);
     };
     
-      const closeModal = () => {
+    const closeModal = () => {
         setModalVisible(false);
     };
 
+    const handleAI = async () => {
+        setIsLoading(true)
+        setAnalysisData('')
+        console.log("pressed \n");
+        const dayTasks = state.tasks.filter(task => new Date(task.date).toDateString() === new Date(date).toDateString())
+        const res = await AIService.analyzeTasks(dayTasks)
+
+        if(res.success){
+            setAnalysisData(res.output);
+        } else {
+            alert("Error while analyzing data");
+        }
+
+        setIsLoading(false)
+
+    }
+
+    const customStyle = {
+        text: {
+          fontSize: 16,
+          color: 'white', // Customize the text color
+        },
+        strong: {
+          fontWeight: 'bold',
+          color: '#0000FF', // Blue for bold text
+        },
+        listItem: {
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          paddingVertical: 4,
+        },
+        bullet: {
+          color: 'white', // Hot pink for bullet points
+          fontSize: 24, // Bigger size for bullet
+        },
+        listItemText: {
+          fontSize: 16,
+          color: 'white', // Black for list item text
+        },
+        em: {
+          fontStyle: 'italic',
+          color: 'white', // Hot pink for italic text
+        },
+    };
+    
 
     return (
         <View>
@@ -42,28 +101,38 @@ export default function AnalysisModal(){
                             <Ionicons name="close-circle" size={28} color="white" />
                         </Pressable>
 
-                        <Text onPress={() => AsyncStorageService.resetTasks()} style={styles.headerText}>Detailed Analysis</Text>
+                        <Text style={styles.headerText}>Detailed Analysis</Text>
                     </View>
 
                     <ScrollView style={styles.body}>
                     
-                        <AIDescriptionCard />
+                        <AIDescriptionCard date={date} />
                         
-                        <Text style={[styles.titleText , { marginTop : 30}]}>Detailed Analysis</Text>
+                        <View style={{ marginTop : 30 , display :'flex' , flexDirection : 'row' , justifyContent : 'space-between' , width : '100%'}}>
+                            <Text style={[styles.titleText , {marginVertical : 'auto'}]}>Detailed Analysis</Text>
+                            <MagicWandButton pressEvent={handleAI} />
+                        </View>
                         
                         <View style={{ backgroundColor : '#181818' ,  marginTop : 20 , padding : 15 , borderRadius : 8}}>
-                            <Text style={{fontSize : 16 , color : 'white'}}>✨ Sit ut minim do quis dolor nostrud culpa proident. Excepteur qui id sint do incididunt dolor ipsum velit culpa eu deserunt tempor. Nostrud nisi sit ullamco duis qui tempor veniam magna eu amet mollit cillum. Ea fugiat incididunt ad nulla. Voluptate ut pariatur veniam adipisicing magna consectetur. Dolor est non laborum minim laborum irure sunt et sit nisi officia irure. Ea Lorem et nulla consectetur fugiat nulla enim.</Text>
+                            <Markdown
+                                    style={customStyle}
+                                    markdownit={
+                                        MarkdownIt({typographer: true}).disable([ 'link', 'image' ])
+                                    }
+                                >
+                                    {analysisData}
+                            </Markdown>
                         </View>
 
                         <Text style={[styles.titleText , { marginTop : 30}]}>Time Analysis</Text>
 
                         <View style={{ marginVertical : 20 }}>
-                            <AiTaskItem />
-                            <AiTaskItem />
-                            <AiTaskItem />
+                            {todayTasks.map((item) => <AiTaskItem key={item.id} item={item} /> )}
                         </View>
                     
                     </ScrollView>
+
+                    <LoadingModal modalVisible={isLoading} />
 
                 </SafeAreaView>
 

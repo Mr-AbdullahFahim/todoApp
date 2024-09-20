@@ -22,10 +22,23 @@ export default {
 
   deleteTask: async function (taskId) {
     const taskList = await this.loadTasks();
-
     const updatedTasks = taskList.filter((task) => task.id !== taskId);
 
     await AsyncStorage.setItem("taskList", JSON.stringify(updatedTasks));
+  },
+
+  deleteTask: async function(taskId){
+    const tasks = await this.loadTasks();
+    
+    for(let i = 0; i < tasks.length; i++){
+      if(tasks[i].id == taskId){
+        tasks.splice(i, 1);
+        break
+      }
+    }
+
+    await AsyncStorage.setItem('taskList', JSON.stringify(tasks));
+
   },
 
   updateTask: async function (updatedTask) {

@@ -32,7 +32,6 @@ export default {
                 message: 'Task deleted successfully'
             }
         }
-
     },
 
     updateTask: async (task , tasks) => {
@@ -43,16 +42,6 @@ export default {
                 message: 'All fields are required'
             }
         }
-        
-
-        {/*for(let i = 0; i < tasks.length; i++){
-
-            if(tasks[i].id == task.id){
-                tasks[i] = task
-                break
-            }
-
-        }*/}
 
         await AyncStorageService.updateTask(task)
 
