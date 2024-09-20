@@ -73,7 +73,7 @@ export default function DashboardScreen() {
 
             <SearchModal />
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ marginTop : 10 }} showsVerticalScrollIndicator={false}>
                 
                 <View style={{ flexDirection : 'row' , justifyContent: 'space-between' }}>
                     <Text style={[styles.headerText , {fontSize: 20}]}>Progress</Text>

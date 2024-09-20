@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorageService from '../../services/AsyncStorageService';
 
 
-export default function AboutAppAScreen(){
+export default function AboutAppAScreen({navigation}){
 
     const resetData = () => {
         Alert.alert('Reset Data', 'Are you sure you want to reset your data?', [
@@ -13,6 +13,7 @@ export default function AboutAppAScreen(){
             {text: 'Reset', onPress: async () => {
                 await AsyncStorageService.resetTasks()
                 Alert.alert('Data Reset', 'Your data has been reset successfully.');
+                navigation.replace('FirstScreen');
             }},
         ]);
     }
@@ -28,23 +29,7 @@ export default function AboutAppAScreen(){
                     </View>
                 </View>
 
-                <View style={{ marginBottom : 10 , padding : 13 , backgroundColor : '#181818' , borderRadius : 8 }}>
-                    <View style={{ display : 'flex' , flexDirection: 'row' , gap : 10 }}>
-                        <AntDesign name="delete" size={24} color="white" />
-                        <Text style={styles.titleText}>Delete your Data</Text>
-                    </View>
-                    <Text style={styles.bodyText}>This action is irreversible. It will delete your data including tasks and other data.</Text>
-
-                    <View style={{ display :'flex' , width : '100%' ,  flexDirection : 'row' , justifyContent : 'flex-end' }}>
-                        <TouchableOpacity onPress={resetData} style={{ marginTop : 10 , borderRadius : 8,  padding : 12 , paddingHorizontal : 25 , backgroundColor : 'rgba(63,19,22,1)' }}>
-                            <Text style={{ color :'#EE716D' , fontSize : 16 }}>Delete Data</Text>
-                        </TouchableOpacity>
-                    </View>
-
-
-                </View>
-                
-                <Text style={styles.bodyText}>App Info</Text>
+                <Text style={[styles.bodyText , {marginTop : 0}]}>App Info</Text>
 
                 <View style={{ borderWidth : 1 , borderColor : 'rgba(255,255,255,0.2)' , marginTop : 13  , backgroundColor : '#181818' , borderRadius : 8 }}>
                     
@@ -67,6 +52,22 @@ export default function AboutAppAScreen(){
                         <Text style={{ color : 'white' , fontSize :16 }}>OpenAI model</Text>
                         <Text style={{ color : 'white' , fontSize :12 , marginVertical : 'auto' }}>gpt-4o-mini</Text>
                     </View>
+
+                </View>
+
+                <View style={{ marginBottom : 10 , padding : 13 , backgroundColor : '#181818' , borderRadius : 8 ,  marginTop : 30 }}>
+                    <View style={{ display : 'flex' , flexDirection: 'row' , gap : 10 }}>
+                        <AntDesign name="delete" size={24} color="white" />
+                        <Text style={styles.titleText}>Delete your Data</Text>
+                    </View>
+                    <Text style={styles.bodyText}>This action is irreversible. It will delete your data including tasks and other data.</Text>
+
+                    <View style={{ display :'flex' , width : '100%' ,  flexDirection : 'row' , justifyContent : 'flex-end' }}>
+                        <TouchableOpacity onPress={resetData} style={{ marginTop : 10 , borderRadius : 8,  padding : 12 , paddingHorizontal : 25 , backgroundColor : 'rgba(63,19,22,1)' }}>
+                            <Text style={{ color :'#EE716D' , fontSize : 16 }}>Delete Data</Text>
+                        </TouchableOpacity>
+                    </View>
+
 
                 </View>
 

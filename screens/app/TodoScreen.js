@@ -106,7 +106,7 @@ export default function TodoScreen() {
                         <FontAwesome name={'search'} size={24} color='#a2a2a2' />
                     </View>
                     <TextInput
-                        style={{ color: 'white', marginLeft: 10 }}
+                        style={{ width : '90%' , color: 'white', marginLeft: 10 }}
                         placeholder='Search Task Here'
                         placeholderTextColor={'white'}
                         value={searchQuery}

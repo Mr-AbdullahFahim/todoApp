@@ -58,7 +58,7 @@ export default function SearchModal(){
                 </View>
 
                 <TextInput
-                    style={{color: 'white', marginLeft: 10}}
+                    style={{width : '90%' , color: 'white', marginLeft: 10}}
                     placeholder="Search Task Here"
                     placeholderTextColor={'white'}
                     readOnly
@@ -76,7 +76,7 @@ export default function SearchModal(){
 
                 <SafeAreaView style={styles.container}>
 
-                    <View style={styles.header}>
+                    <View style={styles.header} >
                         
                         <Pressable style={{ display : 'flex' , justifyContent: 'flex-start' }} onPress={closeModal}>
                             <Ionicons name="close-circle" size={28} color="white" />
@@ -85,8 +85,7 @@ export default function SearchModal(){
                         <Text onPress={() => AsyncStorageService.resetTasks()} style={styles.headerText}>Search tasks</Text>
                     </View>
 
-                    <ScrollView style={styles.body}>
-                                            
+                    <View style={{ display : 'flex' , width  :'100%' , paddingHorizontal : 15, marginTop : 15 }} >
                         <Pressable style={styles.search}>
                     
                             <View>
@@ -94,7 +93,7 @@ export default function SearchModal(){
                             </View>
 
                             <TextInput
-                                style={{color: 'white', marginLeft: 10}}
+                                style={{width : '90%' , color: 'white', marginLeft: 10}}
                                 placeholder="Search Task Here"
                                 placeholderTextColor={'white'}
                                 onChangeText={(text) => setSearchQuery(text)}
@@ -103,18 +102,23 @@ export default function SearchModal(){
 
                         </Pressable>    
                         
-                        
                         <Text style={[styles.titleText , { marginTop : 10}]}>Search results</Text>
+                    </View>
+                    
+                    <View style={styles.body}>
 
-                        <View style={{ marginVertical : 20 }}>
-                            {searchList.map((taskItem , index) => (<TaskItem onTaskUpdate={() => console.log('task updated!')} pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={index} />))}
-                        </View>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            
 
-                        <EditTaskModal item={selectedItem} closeModal={() => closeEditModal()} modalVisible={editModalVisible} />
+                            <View style={{ marginVertical : 20 }}>
+                                {searchList.map((taskItem , index) => (<TaskItem onTaskUpdate={() => console.log('task updated!')} pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={index} />))}
+                            </View>
 
+                            <EditTaskModal item={selectedItem} closeModal={() => closeEditModal()} modalVisible={editModalVisible} />
 
+                        </ScrollView>
 
-                    </ScrollView>
+                    </View>
 
                 </SafeAreaView>
 
