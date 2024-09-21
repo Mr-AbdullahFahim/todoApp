@@ -4,6 +4,8 @@ export const TodoContext = createContext();
 
 const initialState = {
     tasks: [],
+    profiles: [],
+    currentUser: null,
 };
 
 const reducer = (state, action) => {
@@ -20,6 +22,16 @@ const reducer = (state, action) => {
         case 'GET_TASK_BY_ID':
             const task = state.tasks.find(task => task.id === action.payload);
             return { ...state, selectedTask: task }; 
+        
+        case 'SET_CURRENT_USER':
+            return {...state, currentUser: action.payload };
+        case 'ADD_PROFILE':
+            return {...state, profiles: [...state.profiles, action.payload] };
+        case 'DELETE_PROFILE':
+            return {...state, profiles: state.profiles.filter(profile => profile.id!== action.payload) };
+        case 'GET_PROFILE_BY_ID':
+            const profile = state.profiles.find(profile => profile.id === action.payload);
+            return {...state, selectedProfile: profile };
         default:
             return state;
     }

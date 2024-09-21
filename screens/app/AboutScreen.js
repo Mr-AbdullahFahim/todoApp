@@ -1,11 +1,15 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { View, StyleSheet, Text, SafeAreaView, TextInput, Alert } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorageService from '../../services/AsyncStorageService';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import SwitchProfileModal from '../../components/modals/SwitchProfileModal';
+
 
 export default function AboutAppAScreen({navigation}){
+
+    const [switchProfileVisible , setSwitchProfileVisible] = useState(false);
 
     const resetData = () => {
         Alert.alert('Reset Data', 'Are you sure you want to reset your data?', [
@@ -17,6 +21,16 @@ export default function AboutAppAScreen({navigation}){
             }},
         ]);
     }
+
+    const handleSwitchProfile = () => {
+        setSwitchProfileVisible(true)
+    }
+
+
+    const handleCloseSwitchProfile = () => {
+        setSwitchProfileVisible(false)
+    }
+
 
     return(
         <SafeAreaView style={styles.container}>
@@ -31,21 +45,25 @@ export default function AboutAppAScreen({navigation}){
                 
                 <Text style={[styles.bodyText , {marginTop : 10}]}>Profile Info</Text>
 
-                <View style={{ marginBottom : 10 , padding : 13 , backgroundColor : '#181818' , borderRadius : 8 ,  marginTop : 10 }}>
+                <View style={{ display : 'flex' , flexDirection : 'row' , gap : 10 , marginBottom : 10 , padding : 13 , backgroundColor : '#181818' , borderRadius : 15 ,  marginTop : 10 }}>
                     
-                    
-                    <View style={{ display : 'flex' , flexDirection: 'row' , gap : 10 }}>
-                        <AntDesign name="delete" size={24} color="white" />
-                        <Text style={styles.titleText}>Profile Information</Text>
+                    <View style={{ padding : 10 , borderWidth  :1 , borderColor : '#BA83DE' , borderRadius : '50%' }}>
+                        <MaterialCommunityIcons name="account" size={40} color="white" />
                     </View>
-                    <Text style={styles.bodyText}>This action is irreversible. It will delete your data including tasks and other data.</Text>
 
-                    <View style={{ display :'flex' , width : '100%' ,  flexDirection : 'row' , justifyContent : 'flex-end' }}>
-                        <TouchableOpacity onPress={resetData} style={{ marginTop : 10 , borderRadius : 8,  padding : 12 , paddingHorizontal : 25 , backgroundColor : 'rgba(63,19,22,1)' }}>
-                            <Text style={{ color :'#EE716D' , fontSize : 16 }}>Delete Data</Text>
+                    <View style={{ display : 'flex' , width : '75%' , flexDirection: 'row' , justifyContent : 'space-between' , gap : 1 , marginVertical : 'auto' }}>
+                        <View style={{ marginVertical : 'auto' }}>
+                            <Text style={{ fontSize : 20 , color : 'white' ,  }}>Naveen Dhananjaya</Text>
+                            <Text style={styles.para}>Naveen Dhananjaya</Text>
+                        </View>
+                        
+                        <TouchableOpacity onPress={handleSwitchProfile} style={{ marginVertical : 'auto' }}>
+                            <MaterialCommunityIcons name="account-reactivate-outline" size={24} color="white" />
                         </TouchableOpacity>
-                    </View>
 
+                    </View>
+                    {/* <Text style={styles.bodyText}>This action is irreversible. It will delete your data including tasks and other data.</Text> */}
+                
                 </View>
 
                 <Text style={[styles.bodyText , {marginTop : 10}]}>App Info</Text>
@@ -90,6 +108,8 @@ export default function AboutAppAScreen({navigation}){
 
                 </View>
 
+                <SwitchProfileModal closeModal={handleCloseSwitchProfile} visible={switchProfileVisible} />
+
             </View>
 
         </SafeAreaView>
@@ -121,7 +141,10 @@ const styles = StyleSheet.create({
         color: 'white',
         marginVertical : 'auto'
     },
-
+    para: {
+        fontSize : 14,
+        color: 'white',
+    },
     bodyText: {
         color: 'gray',
         marginTop: 15
