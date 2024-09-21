@@ -39,8 +39,8 @@ export default function AboutAppAScreen({navigation}){
 
                 <View style={styles.header}>
                     <View>
-                        <Text style={styles.headerText}>About App</Text>
-                        <Text style={styles.headerText}>App Settings and Info 🌍</Text>
+                        <Text style={styles.headerText}>Profile</Text>
+                        <Text style={styles.headerText}>App Settings and Info 🙋</Text>
                     </View>
                 </View>
                 
@@ -55,7 +55,7 @@ export default function AboutAppAScreen({navigation}){
                     <View style={{ display : 'flex' , width : '75%' , flexDirection: 'row' , justifyContent : 'space-between' , gap : 1 , marginVertical : 'auto' }}>
                         <View style={{ marginVertical : 'auto' }}>
                             <Text style={{ fontSize : 20 , color : 'white' ,  }}>{state.currentUser.name}</Text>
-                            <Text style={styles.para}>Select your profile</Text>
+                            <Text style={styles.para}>Switch between your profiles</Text>
                         </View>
                         
                         <TouchableOpacity onPress={handleSwitchProfile} style={{ marginVertical : 'auto' }}>
