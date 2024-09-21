@@ -2,16 +2,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
   saveNewTask: async function (newTask) {
-    let currentUser = await this.getProfileObjectById((await this.getCurrentProfile()))
+    let id = await this.getCurrentProfile()
+    let currentUser = await this.getProfileObjectById(id)
     const tasks = await this.loadTasks();
     currentUser.tasks.push(newTask);
     await this.updateProfiles(currentUser);
   },
 
   loadTasks: async function () {
-    let currentUser = await this.getProfileObjectById((await this.getCurrentProfile()))
+    let id = await this.getCurrentProfile()
+    let currentUser = await this.getProfileObjectById(id)
+    console.log("currenrt user is => " , currentUser)
     if (currentUser) {
-      return JSON.parse(currentUser.tasks);
+      return currentUser.tasks;
     }
     return [];
   },
@@ -19,6 +22,9 @@ export default {
   resetTasks: async function () {
     await AsyncStorage.removeItem("taskList");
     await AsyncStorage.removeItem("newUser");
+    let id = await this.getCurrentProfile()
+    await this.deleteProfile(id)
+    await AsyncStorage.removeItem("currentUser");
   },
 
   deleteTask: async function (taskId) {
@@ -66,7 +72,7 @@ export default {
 
   getCurrentProfile: async function(){
     const profileId = await AsyncStorage.getItem('currentUser');
-    if(profile){
+    if(profileId){
       return +profileId;
     }
     return null;
@@ -81,11 +87,7 @@ export default {
   },
 
   setCurrentProfile: async function(id){
-    const profile = await AsyncStorage.getItem('currentUser');
-    if(profile){
-      return JSON.parse(profile);
-    }
-    return null;
+    await AsyncStorage.setItem('currentUser', id+"");
   },
 
   addNewProfile: async function(newProfile) {

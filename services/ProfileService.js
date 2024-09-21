@@ -9,7 +9,7 @@ export default {
         if(gotProfile.name == '' || gotProfile.color == ''){
             return {
                 success: false,
-                user: null
+                message: "Please fill out all the fields"
             }
         }
 
@@ -19,7 +19,7 @@ export default {
 
         return {
             success: true,
-            user: newProfile
+            message: newProfile
         }
 
     },
@@ -33,5 +33,5 @@ export default {
         await AsyncStorageService.deleteProfile(profileId)
         return true
     }
-    
+
 }

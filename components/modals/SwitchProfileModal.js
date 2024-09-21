@@ -5,19 +5,45 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import ProfileService from '../../services/ProfileService';
+import AsyncStorageService from '../../services/AsyncStorageService';
+import { useNavigation } from '@react-navigation/native';
+import LoadingModal from './LoadindModal';
+
 
 const AddProfileComponent = ({ setShow, isVisible }) => {
-  const [name, setName] = useState('');
   const backColors = ['#0970E7', '#2BBD76', '#E50913', '#F2A242'];
   const [selectedColor , setSelectedColor] = useState(backColors[Math.floor(Math.random() * backColors.length)]);
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { state , dispatch } = useContext(TodoContext); 
+  
+  const [formData , setFormData] = useState({
+    name: '',
+    color: selectedColor,
+  })
 
-  const handleCreateTask = () => {
-    console.log();
+  const handleCreateProfile = async () => {
+    let res = await ProfileService.createNewProfile(formData)
+
+    if(!res.success){
+        alert(res.message);
+        return;
+    }
+
+    dispatch({ type: "ADD_PROFILE", payload: res.message });
+    setFormData({
+        name: '',
+        color: selectedColor,
+    });
+    setShow(false)
   };
 
   useEffect(() => {
     setSelectedColor(backColors[Math.floor(Math.random() * backColors.length)])
+    setFormData({
+        name: '',
+        color: selectedColor,
+    });
   }, [])
 
   // Animate the component when it's visible or hidden
@@ -51,8 +77,7 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
     >
       <View style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
         <View>
-          <TouchableOpacity
-            onPress={handleCreateTask}
+          <View
             style={{
               backgroundColor: selectedColor,
               padding: 30,
@@ -62,7 +87,7 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
             }}
           >
             <MaterialCommunityIcons name="account" size={70} color="white" />
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -79,12 +104,12 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
         }}
         placeholder="Enter your profile name"
         placeholderTextColor={'white'}
-        onChangeText={(text) => setName(text)}
-        value={name}
+        onChangeText={(text) => setFormData({...formData , name : text})}
+        value={formData.name}
       />
 
       <TouchableOpacity
-        onPress={handleCreateTask}
+        onPress={handleCreateProfile}
         style={{
           backgroundColor: '#D682B9',
           padding: 15,
@@ -120,19 +145,38 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
 export default function SwitchProfileModal({ visible, closeModal }) {
   const { state } = useContext(TodoContext);
   const [showAddProfileComponent, setShowAddProfileComponent] = useState(false);
-
+  const [profiles , setProfiles] = useState([])
+  const [loading  , setLoading] = useState(false);
   const data = Array.from({ length: 4 }, (_, index) => ({ key: String(index) }));
+  const navigation = useNavigation();
 
-  const renderItem = ({ item, index }) => {
-    const isLastItemOdd = data.length % 2 !== 0 && index === data.length - 1;
+    useEffect(() => {
+        const loadProfiles = async () => {
+          setProfiles((await ProfileService.loadProfiles()))
+          console.log("profiles ---->" , profiles)
+        }
+        loadProfiles()
+    }, [visible , showAddProfileComponent])
 
-    return (
-      <View style={[styles.rectangle, isLastItemOdd && styles.centeredRectangle]}>
-        <View style={{ borderRadius: 10, backgroundColor: 'red', minWidth: 120, height: '90%' }}></View>
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 }}>Naveen H...</Text>
-      </View>
-    );
-  };
+    const renderItem = ({ item, index }) => {
+        const isLastItemOdd = data.length % 2 !== 0 && index === data.length - 1;
+
+        const selectProfile = async () => {
+            setLoading(true)
+            await AsyncStorageService.setCurrentProfile(item.id)
+            navigation.replace('Main')
+            setLoading(false)
+        }
+
+        return (
+            <View style={[styles.rectangle, isLastItemOdd && styles.centeredRectangle]}>
+                <TouchableOpacity onPress={selectProfile} style={{display :'flex' , justifyContent : 'center' , alignItems : 'center' , borderRadius: 10, backgroundColor: item.color, minWidth: 120, height: '90%' }}>
+                    <MaterialCommunityIcons name="account" size={70} color="white" />
+                </TouchableOpacity>
+                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 }}>{item.name.length <= 6  ? item.name : `${item.name.substring(0, 6)}...` }</Text>
+            </View>
+        );
+    };
 
   return (
     <View>
@@ -152,38 +196,43 @@ export default function SwitchProfileModal({ visible, closeModal }) {
             <View>
               <View style={styles.body}>
                 <FlatList
-                  data={data}
+                  data={profiles}
                   renderItem={renderItem}
                   numColumns={2}
-                  keyExtractor={(item) => item.key}
+                  keyExtractor={(item) => item.id}
                   contentContainerStyle={styles.gridContainer}
                   scrollEnabled={false}
                 />
               </View>
+                
+                {profiles.length < 4 && (
+                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' , justifyContent :'center' , height  : profiles.length == 0 ?'85%' : 'auto' }}>
+                        <View>
+                        <TouchableOpacity
+                            onPress={() => setShowAddProfileComponent(true)}
+                            style={{ padding: 50, borderWidth: 1, borderColor: 'white', borderRadius: 15 }}
+                        >
+                            <Fontisto name="plus-a" size={24} color="white" />
+                        </TouchableOpacity>
+                        <Text
+                            style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10, textAlign: 'center' }}
+                        >
+                            Add Profile
+                        </Text>
+                        </View>
+                    </View>
+                )}
 
-              <View style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => setShowAddProfileComponent(true)}
-                    style={{ padding: 50, borderWidth: 1, borderColor: 'white', borderRadius: 15 }}
-                  >
-                    <Fontisto name="plus-a" size={24} color="white" />
-                  </TouchableOpacity>
-                  <Text
-                    style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10, textAlign: 'center' }}
-                  >
-                    Add Profile
-                  </Text>
-                </View>
-              </View>
             </View>
           )}
 
-          {showAddProfileComponent && (
-            <View style={{ marginTop: 40 }}>
+          {(showAddProfileComponent) && (
+            <View style={{ marginTop: 40}}>
               <AddProfileComponent setShow={setShowAddProfileComponent} isVisible={showAddProfileComponent} />
             </View>
           )}
+
+          <LoadingModal modalVisible={loading} />
         </SafeAreaView>
       </Modal>
     </View>

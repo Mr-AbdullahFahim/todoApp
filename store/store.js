@@ -21,8 +21,10 @@ const reducer = (state, action) => {
             return { ...state, tasks: state.tasks.map(task => (task.id == action.payload.id ? action.payload.task : task)) };
         case 'GET_TASK_BY_ID':
             const task = state.tasks.find(task => task.id === action.payload);
-            return { ...state, selectedTask: task }; 
-        
+            return { ...state, selectedTask: task };
+        case 'LOAD_PROFILES':
+            state.profiles = [];
+            return {...state, profiles: action.payload };
         case 'SET_CURRENT_USER':
             return {...state, currentUser: action.payload };
         case 'ADD_PROFILE':

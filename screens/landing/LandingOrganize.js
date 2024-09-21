@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View,  StyleSheet , Image, Alert , Text } from 'react-native';
 import CommonButton from '../../components/CommonButton';
+import SwitchProfileModal from '../../components/modals/SwitchProfileModal';
 
 
 export default function LandingOrganize({ navigation }) {
+
+    const [modalVisible , setModalVisible] = useState(false)
+
   return (
     <View style={styles.container}>
         <Image
@@ -16,8 +20,11 @@ export default function LandingOrganize({ navigation }) {
         <Text style={styles.smallText}>You can organize your daily tasks by adding your tasks into separate categories</Text>
 
         <View style={styles.buttonContainer}>
-            <CommonButton text={'Get Started'} pressEvent={() => navigation.replace('Main')} />
+            <CommonButton text={'Get Started'} pressEvent={() => setModalVisible(true)} />
         </View>
+
+        <SwitchProfileModal visible={modalVisible} closeModal={() => setModalVisible(false)} />
+
     </View>
   );
 }
