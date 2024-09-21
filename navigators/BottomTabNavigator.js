@@ -9,6 +9,7 @@ import { TodoContext } from '../store/store';
 import AsyncStorageService from '../services/AsyncStorageService';
 import AboutAppAScreen from '../screens/app/AboutScreen';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import ProfileService from '../services/ProfileService';
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
@@ -17,11 +18,22 @@ export default function BottomTabNavigator() {
   const loadLocalTasks = async () => {
     try{
       let todos = await AsyncStorageService.loadTasks()
-
+      console.log("data is -> " , todos)
       if(todos){
         dispatch({ type: 'LOAD_TASKS', payload: todos });
       }
 
+      const res = await AsyncStorageService.getCurrentProfile()
+      let currentUser = await AsyncStorageService.getProfileObjectById(res)
+      
+      dispatch({ type: 'SET_CURRENT_USER', payload: currentUser });
+
+      const profiles = await ProfileService.loadProfiles()
+      dispatch({ type: 'LOAD_PROFILES', payload: profiles });
+
+      console.log("==============================")
+      console.log("profiles -> " , state.profiles )
+      
     }catch(err){
       console.log("Error while loading local tasks => ", err)
     }

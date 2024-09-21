@@ -29,7 +29,7 @@ export default function DashboardScreen() {
                 setIsAdded(false);
             }
         } catch (error) {
-            console.error('Error loading tasks:', error);
+            console.error('Error loading tasksss:', error);
         }
     };
 
