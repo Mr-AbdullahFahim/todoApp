@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TextInput } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import CalendarPicker from '../../components/modals/CalendarView';
 import ProgressTracker from '../../components/dashboard/ProgressComponent';
@@ -10,6 +10,8 @@ import TodoFilterList from '../../components/TodoScreen/TodoFilterList';
 import { TodoContext } from '../../store/store';
 import TodoService from '../../services/TodoService';
 import AsyncStorageService from '../../services/AsyncStorageService';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 export default function TodoScreen() {
     const [filterType, setFilterType] = useState('Priority');

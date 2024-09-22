@@ -1,11 +1,12 @@
 import React , {useState , useContext} from 'react';
-import { View, StyleSheet, Text, SafeAreaView, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorageService from '../../services/AsyncStorageService';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SwitchProfileModal from '../../components/modals/SwitchProfileModal';
 import { TodoContext } from '../../store/store';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function AboutAppAScreen({navigation}){
@@ -48,7 +49,7 @@ export default function AboutAppAScreen({navigation}){
 
                 <View style={{ display : 'flex' , flexDirection : 'row' , gap : 10 , marginBottom : 10 , padding : 13 , backgroundColor : '#181818' , borderRadius : 15 ,  marginTop : 10 }}>
                     
-                    <View style={{ backgroundColor : state.currentUser.color , padding : 10 , borderWidth  :1 , borderColor : '#BA83DE' , borderRadius : '50%' }}>
+                    <View style={{ backgroundColor : state.currentUser.color , padding : 10 , borderWidth  :1 , borderColor : '#BA83DE' , borderRadius : 50 }}>
                         <MaterialCommunityIcons name="account" size={40} color="white" />
                     </View>
 
