@@ -35,24 +35,27 @@ export default {
   },
 
   deleteTask: async function (taskId) {
-    let currentUser = await this.getProfileObjectById((await this.getCurrentProfile()))
+    let id = await this.getCurrentProfile()
+    let currentUser = await this.getProfileObjectById(id)
+    console.log("current user is => " , currentUser)
     currentUser.tasks = currentUser.tasks.filter((task) => task.id !== taskId);
     await this.updateProfiles(currentUser);
   },
 
-  deleteTask: async function(taskId){
-    let currentUser = await this.getProfileObjectById((await this.getCurrentProfile()))
-    
-    for(let i = 0; i < currentUser.tasks.length; i++){
-      if(currentUser.tasks.tasks[i].id == taskId){
-        currentUser.tasks.splice(i, 1);
-        break
-      }
-    }
+  // deleteTask: async function(taskId){
+  //   let id = await this.getCurrentProfile()
+  //   let currentUser = await this.getProfileObjectById(id)
+  //   console.log("current user is => " , currentUser)
+  //   for(let i = 0; i < currentUser.tasks.length; i++){
+  //     if(currentUser.tasks.tasks[i].id == taskId){
+  //       currentUser.tasks.splice(i, 1);
+  //       break
+  //     }
+  //   }
 
-    await this.updateProfiles(currentUser);
+  //   await this.updateProfiles(currentUser);
 
-  },
+  // },
 
   updateTask: async function (updatedTask) {
     let currentUser = await this.getProfileObjectById((await this.getCurrentProfile()))
@@ -106,6 +109,13 @@ export default {
   deleteProfile: async function(id) {
     const profiles = await this.getAllProfiles();
     const updatedProfiles = profiles.filter((profile) => profile.id!== id);
+    if (updatedProfiles.length == 0) {
+      await AsyncStorage.removeItem('currentUser');
+      await AsyncStorage.removeItem("newUser");
+      await AsyncStorage.removeItem("profiles");
+      await AsyncStorage.removeItem("taskList");
+      return;
+    }
     await AsyncStorage.setItem('profiles', JSON.stringify(updatedProfiles));
   },
 

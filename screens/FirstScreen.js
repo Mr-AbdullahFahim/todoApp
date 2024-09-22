@@ -8,8 +8,9 @@ export default function FirstScreen({ navigation }) {
         const checkAsyncStorage = async () => {
           try {
             const isNewUser = await AsyncStorageService.isNewUser();
-            console.log("is new user -> " , isNewUser)
-            if (isNewUser) {
+            const currentUser = await AsyncStorageService.getCurrentProfile();
+            console.log("is new user -> " , isNewUser , currentUser)
+            if (isNewUser || currentUser == null) {
               navigation.replace('LandingPage'); 
             } else {
               navigation.replace('Main');

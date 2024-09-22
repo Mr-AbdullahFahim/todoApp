@@ -26,9 +26,20 @@ export default {
 
     deleteTask: async function (taskId) {
         if (taskId) {
-            await AsyncStorageService.deleteTask(taskId);
+            console.log("task id is -----> " , taskId)
+
+            // try{
+            //     let res = await AsyncStorageService.deleteTask(taskId);
+            //     console.log(res)
+            //     return
+            // }catch(er){
+            //     console.log(er)
+            // }
+
+            let res = await AsyncStorageService.deleteTask(taskId);
+
             return {
-                success: false,
+                success: true,
                 message: 'Task deleted successfully'
             }
         }

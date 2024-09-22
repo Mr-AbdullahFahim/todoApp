@@ -12,7 +12,7 @@ export default function LandingDaily({ navigation }) {
             resizeMode="contain"
         />
 
-        <Text style={styles.mainText}>Create daily routine</Text>
+        <Text style={[styles.mainText , {textAlign : 'center'}]}>Create daily routine</Text>
         <Text style={styles.smallText}>In Uptodo  you can create your personalized routine to stay productive</Text>
 
         <View style={styles.buttonContainer}>

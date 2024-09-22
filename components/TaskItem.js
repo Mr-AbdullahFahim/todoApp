@@ -47,7 +47,7 @@ export default function TaskItem({
         const res = await TodoService.deleteTask(id);
 
         if (!res.success) {
-            alert(res.message);
+          alert(res.message);
         }
 
         dispatch({ type: "REMOVE_TASK", payload: id }); 
@@ -130,7 +130,7 @@ export default function TaskItem({
                     <CheckButton
                         pressEvent={toggleStatus}
                         taskItem={
-                            state.tasks.find((gotTask) => gotTask.id === task.id) || {}
+                          state.tasks.find((gotTask) => gotTask.id === task.id) || {}
                         }
                     />
                 </View>

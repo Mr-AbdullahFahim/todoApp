@@ -16,7 +16,7 @@ export default function LandingOrganize({ navigation }) {
             resizeMode="contain"
         />
 
-        <Text style={styles.mainText}>Organize  your tasks</Text>
+        <Text style={[styles.mainText , {textAlign : 'center'}]}>Organize  your tasks</Text>
         <Text style={styles.smallText}>You can organize your daily tasks by adding your tasks into separate categories</Text>
 
         <View style={styles.buttonContainer}>

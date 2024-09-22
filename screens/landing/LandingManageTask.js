@@ -12,7 +12,7 @@ export default function LandingManageTask({ navigation }) {
             resizeMode="contain"
         />
 
-        <Text style={styles.mainText}>Manage your tasks</Text>
+        <Text style={[styles.mainText , {textAlign : 'center'}]}>Manage your tasks using AI</Text>
         <Text style={styles.smallText}>You can easily manage all of your daily tasks in UpTodo for free</Text>
 
         <View style={styles.buttonContainer}>

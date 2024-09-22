@@ -20,7 +20,7 @@ export default function SearchModal(){
 
     useEffect(() => {
         setSearchList(state.tasks)
-    } , [modalVisible , editModalVisible])
+    } , [modalVisible , editModalVisible , state.tasks])
     
     const openModal = () => {
         setModalVisible(true);
@@ -112,7 +112,16 @@ export default function SearchModal(){
                             
 
                             <View style={{ marginVertical : 20 }}>
-                                {searchList.map((taskItem , index) => (<TaskItem swipedTaskId={swipedTaskId} setSwipedTaskId={setSwipedTaskId} onTaskUpdate={() => console.log('task updated!')} pressEvent={() => setSelectedItemForModal(taskItem)} item={taskItem} key={index} />))}
+                                {searchList.map((taskItem , index) => (
+                                    <TaskItem
+                                        swipedTaskId={swipedTaskId}
+                                        setSwipedTaskId={setSwipedTaskId}
+                                        onTaskUpdate={() => console.log('task updated!')}
+                                        pressEvent={() => setSelectedItemForModal(taskItem)}
+                                        item={taskItem}
+                                        key={taskItem.id}
+                                    />
+                                ))}
                             </View>
 
                             <EditTaskModal item={selectedItem} closeModal={() => closeEditModal()} modalVisible={editModalVisible} />
