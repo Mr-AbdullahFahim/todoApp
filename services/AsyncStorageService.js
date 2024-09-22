@@ -1,6 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default {
+
+  setupAsyncStorage: async function(){
+    await AsyncStorage.removeItem("newUser");
+    await AsyncStorage.setItem("currentUser", "");
+    await AsyncStorage.setItem("profiles", JSON.stringify([]));
+  },
+
   saveNewTask: async function (newTask) {
     let id = await this.getCurrentProfile()
     let currentUser = await this.getProfileObjectById(id)

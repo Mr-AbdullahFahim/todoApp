@@ -1,4 +1,4 @@
-import { View , StyleSheet , Text , TextInput} from 'react-native';
+import { View , StyleSheet , Text , TextInput, Pressable} from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProgressTracker from '../../components/dashboard/ProgressComponent';
@@ -75,9 +75,12 @@ export default function DashboardScreen() {
 
             <ScrollView style={{ marginTop : 10 }} showsVerticalScrollIndicator={false}>
                 
-                <View style={{ flexDirection : 'row' , justifyContent: 'space-between' }}>
+                <Pressable onPress={() => {
+                    console.log('pressed it!!')
+                    AsyncStorageService.setupAsyncStorage()
+                }} style={{ flexDirection : 'row' , justifyContent: 'space-between' }}>
                     <Text style={[styles.headerText , {fontSize: 20}]}>Progress</Text>
-                </View>
+                </Pressable>
 
                 {isLoading && <ProgressTracker  taskList={state.tasks.filter((task) => {
                     const taskDate = new Date(task.date);

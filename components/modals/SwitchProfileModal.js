@@ -108,7 +108,7 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
         value={formData.name}
       />
 
-      <TouchableOpacity
+      <Pressable
         onPress={handleCreateProfile}
         style={{
           backgroundColor: '#D682B9',
@@ -121,9 +121,9 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
         }}
       >
         <Text style={{ fontSize: 18, color: 'white' }}>Add new profile</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
+      <Pressable
         onPress={() => setShow(false)}
         style={{
           padding: 15,
@@ -137,7 +137,7 @@ const AddProfileComponent = ({ setShow, isVisible }) => {
         }}
       >
         <Text style={{ fontSize: 18, color: 'white' }}>Cancel</Text>
-      </TouchableOpacity>
+      </Pressable>
     </Animated.View>
   );
 };
@@ -151,31 +151,31 @@ export default function SwitchProfileModal({ visible, closeModal }) {
   const navigation = useNavigation();
 
     useEffect(() => {
-        const loadProfiles = async () => {
-          setProfiles((await ProfileService.loadProfiles()))
-          console.log("profiles ---->" , profiles)
-        }
-        loadProfiles()
+      const loadProfiles = async () => {
+        setProfiles((await ProfileService.loadProfiles()))
+        console.log("profiles ---->" , profiles)
+      }
+      loadProfiles()
     }, [visible , showAddProfileComponent])
 
     const renderItem = ({ item, index }) => {
-        const isLastItemOdd = data.length % 2 !== 0 && index === data.length - 1;
+      const isLastItemOdd = data.length % 2 !== 0 && index === data.length - 1;
 
-        const selectProfile = async () => {
-            setLoading(true)
-            await AsyncStorageService.setCurrentProfile(item.id)
-            navigation.replace('Main')
-            setLoading(false)
-        }
+      const selectProfile = async () => {
+        setLoading(true)
+        await AsyncStorageService.setCurrentProfile(item.id)
+        navigation.replace('Main')
+        setLoading(false)
+      }
 
-        return (
-            <View style={[styles.rectangle, isLastItemOdd && styles.centeredRectangle]}>
-                <TouchableOpacity onPress={selectProfile} style={{display :'flex' , justifyContent : 'center' , alignItems : 'center' , borderRadius: 10, backgroundColor: item.color, minWidth: 120, height: '90%' }}>
-                    <MaterialCommunityIcons name="account" size={70} color="white" />
-                </TouchableOpacity>
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 }}>{item.name.length <= 6  ? item.name : `${item.name.substring(0, 6)}...` }</Text>
-            </View>
-        );
+      return (
+        <View style={[styles.rectangle, isLastItemOdd && styles.centeredRectangle]}>
+          <Pressable onPress={selectProfile} style={{display :'flex' , justifyContent : 'center' , alignItems : 'center' , borderRadius: 10, backgroundColor: item.color, minWidth: 120, height: '90%' }}>
+            <MaterialCommunityIcons name="account" size={70} color="white" />
+          </Pressable>
+          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 }}>{item.name.length <= 6  ? item.name : `${item.name.substring(0, 6)}...` }</Text>
+        </View>
+      );
     };
 
   return (
@@ -205,24 +205,21 @@ export default function SwitchProfileModal({ visible, closeModal }) {
                 />
               </View>
                 
-                {profiles.length < 4 && (
-                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' , justifyContent :'center' , height  : profiles.length == 0 ?'85%' : 'auto' }}>
-                        <View>
-                        <TouchableOpacity
-                            onPress={() => setShowAddProfileComponent(true)}
-                            style={{ padding: 50, borderWidth: 1, borderColor: 'white', borderRadius: 15 }}
-                        >
-                            <Fontisto name="plus-a" size={24} color="white" />
-                        </TouchableOpacity>
-                        <Text
-                            style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10, textAlign: 'center' }}
-                        >
-                            Add Profile
-                        </Text>
-                        </View>
+              {profiles.length < 4 && (
+                <Pressable onPress={() => setShowAddProfileComponent(true)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' , justifyContent :'center' , height  : profiles.length == 0 ?'85%' : 'auto' }}>
+                    <View >
+                      <View style={{ padding: 50, borderWidth: 1, borderColor: 'white', borderRadius: 15 }} >
+                        <Fontisto name="plus-a" size={24} color="white" />
+                      </View>
+                      <Text
+                        style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10, textAlign: 'center' }}
+                      >
+                        Add Profile
+                      </Text>
                     </View>
-                )}
-
+                </Pressable>
+              )}
+                
             </View>
           )}
 
